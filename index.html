@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1612">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Café K6">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180x180.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
+<title>Diario de Café — K6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0d0b;
+  --bg2: #1a1612;
+  --bg3: #231e19;
+  --border: #2e2720;
+  --border2: #3d352c;
+  --text: #e8ddd0;
+  --text2: #9a8878;
+  --text3: #5c5048;
+  --accent: #c8853a;
+  --accent2: #8a4f1a;
+  --gold: #d4a843;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'DM Mono',monospace;font-size:14px;line-height:1.5;
+  display:flex;flex-direction:column;
+}
+
+/* Header */
+header{
+  padding:calc(var(--safe-top) + 14px) 1.25rem 12px;
+  border-bottom:0.5px solid var(--border);
+  background:var(--bg);flex-shrink:0;
+}
+.header-inner{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+h1{font-family:'DM Serif Display',serif;font-size:1.45rem;font-weight:400;color:var(--text)}
+h1 span{color:var(--accent);font-style:italic}
+.header-meta{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+
+/* Tabs */
+.tab-bar{display:flex;border-bottom:0.5px solid var(--border);background:var(--bg);flex-shrink:0}
+.tab-btn{
+  flex:1;padding:11px 0;font-size:11px;font-family:'DM Mono',monospace;
+  font-weight:400;letter-spacing:.07em;text-transform:uppercase;
+  background:transparent;border:none;border-bottom:1.5px solid transparent;
+  color:var(--text3);cursor:pointer;transition:all .18s;
+}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* Scrollable content */
+.tab-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tab-pane{display:none;padding:1rem 1rem calc(var(--safe-bottom) + 1.5rem)}
+.tab-pane.active{display:block}
+
+/* Filters */
+.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.filter-label{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;width:100%;margin-bottom:2px}
+.filter-btn{
+  padding:4px 10px;font-size:10px;font-family:'DM Mono',monospace;
+  letter-spacing:.04em;border-radius:2px;border:0.5px solid var(--border2);
+  background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;
+}
+.filter-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+
+/* Grid — single col on mobile, 2 col on wider */
+.recipes-grid{display:grid;grid-template-columns:1fr;gap:9px}
+@media(min-width:560px){.recipes-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:860px){.recipes-grid{grid-template-columns:repeat(3,1fr)}}
+
+/* Card */
+.recipe-card{
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:4px;padding:.9rem 1rem;cursor:pointer;
+  transition:border-color .15s;
+}
+.recipe-card.expanded{border-color:var(--accent2)}
+.card-method{font-size:10px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
+.card-title{font-family:'DM Serif Display',serif;font-size:.95rem;font-weight:400;color:var(--text);margin-bottom:2px;line-height:1.3}
+.card-desc{font-size:11px;color:var(--text3);margin-top:1px}
+.card-header-row{display:flex;justify-content:space-between;align-items:flex-start}
+.expand-icon{font-size:13px;color:var(--text3);margin-left:6px;flex-shrink:0;transition:transform .2s;margin-top:3px}
+.recipe-card.expanded .expand-icon{transform:rotate(180deg);color:var(--accent)}
+
+/* Selectors */
+.selectors-row{display:flex;gap:10px;margin-top:9px;flex-wrap:wrap}
+.selector-group{display:flex;flex-direction:column;gap:4px}
+.selector-label{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.selector-btns{display:flex;gap:4px}
+.sel-btn{
+  padding:4px 9px;font-size:11px;font-family:'DM Mono',monospace;
+  border-radius:2px;border:0.5px solid var(--border2);
+  background:transparent;color:var(--text3);cursor:pointer;transition:all .13s;
+}
+.sel-btn.active{background:var(--bg3);color:var(--text);border-color:var(--border2)}
+
+/* Stats pills */
+.stats-row{display:flex;gap:5px;margin-top:9px}
+.stat-pill{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--bg3);border:0.5px solid var(--border);
+  border-radius:3px;padding:6px 8px;flex:1;
+}
+.stat-val{font-size:14px;font-weight:500;color:var(--text);font-family:'DM Mono',monospace}
+.stat-key{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.04em;text-align:center}
+
+/* Detail expand */
+.detail-section{
+  margin-top:9px;padding-top:9px;
+  border-top:0.5px solid var(--border);
+  animation:fadeIn .2s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.steps-list{list-style:none}
+.step-item{
+  display:flex;gap:7px;align-items:flex-start;
+  padding:5px 0;border-bottom:0.5px solid var(--border);
+  font-size:11px;color:var(--text2);
+}
+.step-item:last-child{border-bottom:none}
+.step-num{
+  font-size:10px;color:var(--accent);background:var(--bg3);
+  border:0.5px solid var(--accent2);border-radius:2px;
+  width:17px;height:17px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'DM Mono',monospace;
+}
+.step-time{font-size:10px;color:var(--text3);margin-left:auto;padding-left:7px;white-space:nowrap;font-family:'DM Mono',monospace}
+.time-total-row{display:flex;justify-content:space-between;margin-top:8px;margin-bottom:3px;font-size:10px}
+.time-total-row span:first-child{color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.time-total-row span:last-child{color:var(--text);font-weight:500}
+.notes-box{
+  font-size:11px;color:var(--text2);background:var(--bg);
+  border-radius:3px;padding:7px 9px;margin-top:7px;
+  border-left:1.5px solid var(--accent2);
+}
+
+/* Log form */
+.log-form{
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:4px;padding:1.1rem;margin-bottom:.85rem;
+}
+.form-title{
+  font-family:'DM Serif Display',serif;font-size:.95rem;
+  font-weight:400;margin-bottom:.9rem;color:var(--text);
+}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+.form-group label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+.form-group select,.form-group input,.form-group textarea{
+  font-size:13px;font-family:'DM Mono',monospace;
+  padding:7px 9px;border:0.5px solid var(--border2);border-radius:3px;
+  background:var(--bg3);color:var(--text);width:100%;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color .15s;
+}
+.form-group select:focus,.form-group input:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--accent2);
+}
+.form-group textarea{resize:vertical;min-height:54px}
+.stars-row{display:flex;gap:4px}
+.star-btn{font-size:22px;background:none;border:none;cursor:pointer;color:var(--text3);transition:color .1s;line-height:1;padding:0}
+.star-btn.lit{color:var(--gold)}
+.btn-row{display:flex;gap:7px;margin-top:5px}
+.submit-btn{
+  flex:1;padding:10px;font-size:11px;font-family:'DM Mono',monospace;
+  letter-spacing:.07em;text-transform:uppercase;
+  border:0.5px solid var(--accent);border-radius:3px;
+  background:var(--accent);color:var(--bg);cursor:pointer;transition:opacity .15s;
+}
+.submit-btn:active{opacity:.75}
+.export-btn{
+  padding:10px 14px;font-size:11px;font-family:'DM Mono',monospace;
+  letter-spacing:.06em;text-transform:uppercase;
+  border:0.5px solid var(--border2);border-radius:3px;
+  background:transparent;color:var(--text3);cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+.export-btn:disabled{opacity:.3;cursor:not-allowed}
+.status-msg{font-size:11px;color:var(--text3);margin-top:7px;min-height:15px;text-align:center;letter-spacing:.04em}
+
+/* Log list */
+.log-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.log-header-bar h3{font-family:'DM Serif Display',serif;font-size:.95rem;font-weight:400;color:var(--text)}
+.log-list{display:flex;flex-direction:column;gap:7px}
+.log-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;padding:.85rem 1rem}
+.log-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.log-title{font-size:13px;font-weight:500;color:var(--text)}
+.log-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.log-stars{color:var(--gold);font-size:13px}
+.log-notes{font-size:12px;color:var(--text2);margin-top:5px;line-height:1.4}
+.delete-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text3);padding:3px 6px;border-radius:2px}
+.delete-btn:active{color:#A32D2D}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3);font-size:13px;line-height:1.9}
+.empty-state em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--text2);font-size:1rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <h1>Diario de <span>Café</span></h1>
+    <span class="header-meta">K6 · V60 &amp; más</span>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('recipes')">Recetas</button>
+  <button class="tab-btn" onclick="switchTab('log')">Mi Registro</button>
+</div>
+
+<div class="tab-content">
+  <div id="pane-recipes" class="tab-pane active">
+    <div class="filters">
+      <span class="filter-label">Filtrar por método</span>
+      <button class="filter-btn active" onclick="setFilter('all',this)">Todos</button>
+      <button class="filter-btn" onclick="setFilter('V60 Switch',this)">Switch</button>
+      <button class="filter-btn" onclick="setFilter('V60 Tradicional',this)">Trad.</button>
+      <button class="filter-btn" onclick="setFilter('V60 Neo Tritan',this)">Neo Tritan</button>
+      <button class="filter-btn" onclick="setFilter('Aeropress',this)">Aeropress</button>
+      <button class="filter-btn" onclick="setFilter('Origami',this)">Origami</button>
+      <button class="filter-btn" onclick="setFilter('Chemex',this)">Chemex</button>
+      <button class="filter-btn" onclick="setFilter('Prensa Francesa',this)">Prensa</button>
+      <button class="filter-btn" onclick="setFilter('Sifón Japonés',this)">Sifón</button>
+    </div>
+    <div class="recipes-grid" id="recipes-grid"></div>
+  </div>
+
+  <div id="pane-log" class="tab-pane">
+    <div class="log-form">
+      <div class="form-title">Nueva sesión</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Método</label>
+          <select id="log-method">
+            <option>V60 Switch</option>
+            <option>V60 Tradicional</option>
+            <option>V60 Neo Tritan</option>
+            <option>Aeropress</option>
+            <option>Origami</option>
+            <option>Chemex</option>
+            <option>Prensa Francesa</option>
+            <option>Sifón Japonés</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dosis</label>
+          <select id="log-dose">
+            <option value="15">15g</option>
+            <option value="18" selected>18g</option>
+            <option value="30">30g</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ratio</label>
+          <select id="log-ratio">
+            <option value="15">1:15</option>
+            <option value="16" selected>1:16</option>
+            <option value="17">1:17</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Clicks molino</label>
+          <input type="number" id="log-clicks" placeholder="Ej: 105" inputmode="numeric">
+        </div>
+        <div class="form-group">
+          <label>Temperatura</label>
+          <input type="text" id="log-temp" placeholder="Ej: 91°C">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Calificación</label>
+          <div class="stars-row" id="stars-input">
+            <button class="star-btn" onclick="setStar(1)">★</button>
+            <button class="star-btn" onclick="setStar(2)">★</button>
+            <button class="star-btn" onclick="setStar(3)">★</button>
+            <button class="star-btn" onclick="setStar(4)">★</button>
+            <button class="star-btn" onclick="setStar(5)">★</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex-basis:100%">
+          <label>Notas de cata, ajustes, origen…</label>
+          <textarea id="log-notes" placeholder="Ej: Etiopía natural — frutoso, probé 102 clicks, perfil más limpio"></textarea>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="submit-btn" onclick="submitLog()">Guardar sesión</button>
+        <button class="export-btn" id="export-btn" onclick="exportPDF()">PDF</button>
+      </div>
+      <div class="status-msg" id="status-msg"></div>
+    </div>
+    <div class="log-header-bar">
+      <h3>Historial</h3>
+    </div>
+    <div class="log-list" id="log-list"></div>
+  </div>
+</div>
+
+<script>
+// ── Data ─────────────────────────────────────────────────────────────
+const DOSES = [15, 18, 30];
+const RATIOS_OPT = [15, 16, 17];
+
+function calcWater(dose, ratio) { return dose * ratio; }
+function calcBloom(dose) { return Math.round(dose * 2); }
+
+const RECIPES = [
+  {id:1,method:'V60 Switch',name:'Switch — inmersión + percolación',desc:'Empieza cerrado para extracción profunda, abre para filtrar.',temp:'91°C',
+   clicks:{15:102,18:105,30:108},totalTime:'3:30 – 4:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml en espiral. Switch cerrado.`},
+    {t:'0:30',s:`Vierte hasta ${Math.round(w*.5)}ml. Circular.`},
+    {t:'1:30',s:`Completa hasta ${w}ml. Agita suave.`},
+    {t:'2:00',s:'Abre el switch. Deja drenar.'},
+    {t:'3:30',s:'Goteo termina ~3:30–4:00 min.'}]},
+   notes:'Clicks actuales: 105 (probando 102). El switch cerrado da mayor contacto café-agua antes del filtrado.'},
+  {id:2,method:'V60 Tradicional',name:'V60 — vertido clásico',desc:'Percolación continua. Control total del flujo.',temp:'91°C',
+   clicks:{15:95,18:98,30:102},totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml. Espera 30 seg.`},
+    {t:'0:30',s:`Vierte hasta ${Math.round(w*.45)}ml en espiral.`},
+    {t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml. Flujo delgado.`},
+    {t:'1:45',s:`Tercera hasta ${w}ml.`},
+    {t:'2:45',s:'Goteo completo. Retira el V60.'}]},
+   notes:'Molienda ligeramente más fina que el Switch. Bloom sin expansión = café oxidado.'},
+  {id:3,method:'V60 Neo Tritan',name:'Neo Tritan — mayor retención de calor',desc:'Misma técnica V60, plástico de alto rendimiento.',temp:'91°C',
+   clicks:{15:105,18:107,30:110},totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Precalienta bien. Bloom: ${b}ml.`},
+    {t:'0:35',s:`Vierte hasta ${Math.round(w*.45)}ml. Circular suave.`},
+    {t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml.`},
+    {t:'1:50',s:`Completa hasta ${w}ml.`},
+    {t:'2:45',s:'Goteo completo.'}]},
+   notes:'Tus clicks: 105–110. Retiene más temperatura que cerámica o vidrio.'},
+  {id:4,method:'Aeropress',name:'Aeropress — extracción rápida',desc:'Presión + tiempo corto. Perfil concentrado.',temp:'91°C',
+   clicks:{15:95,18:98,30:100},totalTime:'1:30 – 2:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:'Precalienta y humedece el filtro.'},
+    {t:'0:10',s:`Agrega ${d}g. Vierte ${w}ml a 91°C.`},
+    {t:'0:20',s:'Revuelve 3–4 veces. Coloca el émbolo.'},
+    {t:'1:00',s:'Presiona lentamente en 30 seg.'},
+    {t:'1:30',s:'Para al sentir resistencia.'}]},
+   notes:'Tus clicks: 98. La Aeropress es muy indulgente — experimenta ±5 clicks sin miedo.'},
+  {id:5,method:'Origami',name:'Origami — percolación elegante',desc:'Copa ancha. Perfil brillante y ácido.',temp:'91°C',
+   clicks:{15:93,18:96,30:100},totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml. Espera 35 seg.`},
+    {t:'0:35',s:`Vierte hasta ${Math.round(w*.5)}ml en circular amplio.`},
+    {t:'1:15',s:`Segunda hasta ${Math.round(w*.75)}ml.`},
+    {t:'1:50',s:`Final hasta ${w}ml. Centro.`},
+    {t:'2:45',s:'Cama plana = buena distribución.'}]},
+   notes:'Usa la copa sobre un servidor. Apertura más amplia da perfil más brillante que el V60.'},
+  {id:6,method:'Chemex',name:'Chemex — cuerpo limpio y elegante',desc:'Filtro grueso. Taza muy limpia.',temp:'92°C',
+   clicks:{15:88,18:92,30:98},totalTime:'4:00 – 4:30 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Pre-humedece el filtro grueso. Bloom: ${b}ml.`},
+    {t:'0:45',s:`Primera hasta ${Math.round(w*.4)}ml. Flujo lento.`},
+    {t:'1:30',s:`Segunda hasta ${Math.round(w*.7)}ml.`},
+    {t:'2:30',s:`Tercera hasta ${w}ml.`},
+    {t:'4:15',s:'Goteo completo. Taza muy clara.'}]},
+   notes:'Molienda más gruesa por el filtro Chemex. +1°C compensa el tiempo extra.'},
+  {id:7,method:'Prensa Francesa',name:'Prensa Francesa — cuerpo completo',desc:'Inmersión total sin filtro. Máximo cuerpo.',temp:'92°C',
+   clicks:{15:120,18:125,30:130},totalTime:'4:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:`${d}g molido grueso. Vierte ${w}ml.`},
+    {t:'0:20',s:'Revuelve suavemente.'},
+    {t:'0:30',s:'Émbolo sin presionar. Espera 4 min.'},
+    {t:'4:00',s:'Presiona hasta la mitad, no el fondo.'},
+    {t:'4:15',s:'Sirve inmediatamente.'}]},
+   notes:'La molienda más gruesa. Amargo = sube clicks. Aguado = baja clicks.'},
+  {id:8,method:'Sifón Japonés',name:'Sifón Japonés — claridad y espectáculo',desc:'Vacío + vapor. Claridad inusual para inmersión.',temp:'93°C',
+   clicks:{15:90,18:93,30:97},totalTime:'5:00 – 6:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:`Cámara inferior con ${w}ml. Enciende el fuego.`},
+    {t:'2:00',s:'El agua sube. Agrega el café.'},
+    {t:'2:15',s:`Revuelve ${d}g. Fuego bajo.`},
+    {t:'3:15',s:'Retira el calor. El vacío jala el café.'},
+    {t:'4:30',s:'Espera que drene completamente.'},
+    {t:'5:30',s:'Sirve desde la cámara inferior.'}]},
+   notes:'Clicks estándar K6 molienda media-fina. Más setup, pero taza de extraordinaria claridad.'}
+];
+
+// ── State ─────────────────────────────────────────────────────────────
+let currentFilter='all', expandedId=null;
+let selectedDoses={}, selectedRatios={};
+let currentStar=0, logs=[];
+
+// ── Storage ──────────────────────────────────────────────────────────
+function loadLogs(){
+  try{const d=localStorage.getItem('cafe_logs_v2');if(d)logs=JSON.parse(d);}catch(e){logs=[];}
+}
+function saveLogs(){
+  try{localStorage.setItem('cafe_logs_v2',JSON.stringify(logs));}catch(e){}
+}
+
+// ── Recipes ──────────────────────────────────────────────────────────
+function renderRecipes(){
+  const grid=document.getElementById('recipes-grid');
+  const filtered=currentFilter==='all'?RECIPES:RECIPES.filter(r=>r.method===currentFilter);
+  grid.innerHTML=filtered.map(recipe=>{
+    const dose=selectedDoses[recipe.id]||18;
+    const ratio=selectedRatios[recipe.id]||16;
+    const w=calcWater(dose,ratio);
+    const clicks=recipe.clicks[dose];
+    const isExp=expandedId===recipe.id;
+    const steps=recipe.steps(dose,ratio);
+    return `<div class="recipe-card${isExp?' expanded':''}" id="card-${recipe.id}">
+      <div onclick="toggleExpand(${recipe.id})">
+        <div class="card-header-row">
+          <div>
+            <div class="card-method">${recipe.method}</div>
+            <div class="card-title">${recipe.name}</div>
+            <div class="card-desc">${recipe.desc}</div>
+          </div>
+          <span class="expand-icon">${isExp?'▲':'▼'}</span>
+        </div>
+      </div>
+      <div class="selectors-row" onclick="event.stopPropagation()">
+        <div class="selector-group">
+          <div class="selector-label">Dosis</div>
+          <div class="selector-btns">${DOSES.map(d=>`<button class="sel-btn${dose===d?' active':''}" onclick="setDose(${recipe.id},${d})">${d}g</button>`).join('')}</div>
+        </div>
+        <div class="selector-group">
+          <div class="selector-label">Ratio</div>
+          <div class="selector-btns">${RATIOS_OPT.map(r=>`<button class="sel-btn${ratio===r?' active':''}" onclick="setRatio(${recipe.id},${r})">1:${r}</button>`).join('')}</div>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-pill"><span class="stat-val">${clicks}</span><span class="stat-key">Clicks K6</span></div>
+        <div class="stat-pill"><span class="stat-val">${w}ml</span><span class="stat-key">Agua</span></div>
+        <div class="stat-pill"><span class="stat-val">${recipe.temp}</span><span class="stat-key">Temp.</span></div>
+        <div class="stat-pill"><span class="stat-val">1:${ratio}</span><span class="stat-key">Ratio</span></div>
+      </div>
+      ${isExp?`<div class="detail-section">
+        <ul class="steps-list">
+          ${steps.map((s,i)=>`<li class="step-item"><span class="step-num">${i+1}</span><span>${s.s}</span><span class="step-time">${s.t}</span></li>`).join('')}
+        </ul>
+        <div class="time-total-row"><span>Tiempo total</span><span>${recipe.totalTime}</span></div>
+        <div class="notes-box">${recipe.notes}</div>
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function toggleExpand(id){expandedId=expandedId===id?null:id;renderRecipes();}
+function setDose(id,d){selectedDoses[id]=d;renderRecipes();}
+function setRatio(id,r){selectedRatios[id]=r;renderRecipes();}
+function setFilter(val,btn){
+  currentFilter=val;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderRecipes();
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',
+    (i===0&&tab==='recipes')||(i===1&&tab==='log')));
+  if(tab==='log')renderLogs();
+}
+
+// ── Log ──────────────────────────────────────────────────────────────
+function setStar(n){
+  currentStar=n;
+  document.querySelectorAll('#stars-input .star-btn').forEach((b,i)=>b.classList.toggle('lit',i<n));
+}
+function submitLog(){
+  const entry={
+    id:Date.now(),
+    method:document.getElementById('log-method').value,
+    dose:document.getElementById('log-dose').value,
+    ratio:document.getElementById('log-ratio').value,
+    clicks:document.getElementById('log-clicks').value,
+    temp:document.getElementById('log-temp').value,
+    notes:document.getElementById('log-notes').value,
+    stars:currentStar,
+    date:new Date().toLocaleString('es-CO',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
+  };
+  logs.unshift(entry);saveLogs();
+  document.getElementById('log-notes').value='';
+  document.getElementById('log-clicks').value='';
+  document.getElementById('log-temp').value='';
+  setStar(0);setStatus('Sesión guardada ✓');renderLogs();
+}
+function deleteLog(id){logs=logs.filter(l=>l.id!==id);saveLogs();renderLogs();}
+function setStatus(msg){
+  const el=document.getElementById('status-msg');el.textContent=msg;
+  setTimeout(()=>el.textContent='',3000);
+}
+function renderLogs(){
+  const list=document.getElementById('log-list');
+  if(!logs.length){
+    list.innerHTML='<div class="empty-state"><em>Sin sesiones aún</em><br><br>Registra tu próxima taza arriba.<br>Se guarda en este dispositivo.</div>';
+    return;
+  }
+  list.innerHTML=logs.map(l=>`
+    <div class="log-item">
+      <div class="log-item-header">
+        <div>
+          <div class="log-title">${l.method} · ${l.dose}g · 1:${l.ratio||16}</div>
+          <div class="log-meta">${l.date}${l.clicks?' · '+l.clicks+' clicks':''}${l.temp?' · '+l.temp:''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="log-stars">${'★'.repeat(l.stars||0)}${'☆'.repeat(5-(l.stars||0))}</span>
+          <button class="delete-btn" onclick="deleteLog(${l.id})">✕</button>
+        </div>
+      </div>
+      ${l.notes?`<div class="log-notes">${l.notes}</div>`:''}
+    </div>`).join('');
+}
+
+// ── Export PDF ────────────────────────────────────────────────────────
+function exportPDF(){
+  if(!logs.length){setStatus('No hay sesiones para exportar.');return;}
+  const btn=document.getElementById('export-btn');
+  btn.disabled=true;btn.textContent='...';
+  const rows=logs.map(l=>`<tr>
+    <td>${l.date}</td><td>${l.method}</td><td>${l.dose}g</td>
+    <td>1:${l.ratio||16}</td><td>${l.clicks||'—'}</td><td>${l.temp||'—'}</td>
+    <td>${'★'.repeat(l.stars||0)}</td><td>${l.notes||''}</td>
+  </tr>`).join('');
+  const avg=(logs.reduce((a,l)=>a+(l.stars||0),0)/logs.length).toFixed(1);
+  const methods={};logs.forEach(l=>{methods[l.method]=(methods[l.method]||0)+1;});
+  const top=Object.entries(methods).sort((a,b)=>b[1]-a[1])[0][0];
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <style>body{font-family:Georgia,serif;color:#1a1612;max-width:900px;margin:0 auto;padding:2rem}
+  h1{font-size:2rem;font-weight:400;margin-bottom:.2rem}.sub{color:#666;font-size:.85rem;margin-bottom:2rem}
+  .stats{display:flex;gap:2rem;margin-bottom:2rem;padding:1rem;background:#f5f0eb;border-radius:4px}
+  .stat{display:flex;flex-direction:column}.stat-v{font-size:1.2rem;font-weight:500}
+  .stat-k{font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.05em}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  th{text-align:left;padding:6px 8px;border-bottom:1.5px solid #1a1612;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:#555}
+  td{padding:6px 8px;border-bottom:0.5px solid #ddd;vertical-align:top}
+  tr:last-child td{border-bottom:none}@media print{body{padding:1rem}}</style>
+  </head><body>
+  <h1>Diario de Café</h1>
+  <div class="sub">Exportado el ${new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})} · Kingrinder K6</div>
+  <div class="stats">
+    <div class="stat"><span class="stat-v">${logs.length}</span><span class="stat-k">Sesiones</span></div>
+    <div class="stat"><span class="stat-v">${avg} ★</span><span class="stat-k">Promedio</span></div>
+    <div class="stat"><span class="stat-v">${top}</span><span class="stat-k">Método favorito</span></div>
+  </div>
+  <table><thead><tr><th>Fecha</th><th>Método</th><th>Dosis</th><th>Ratio</th><th>Clicks</th><th>Temp.</th><th>★</th><th>Notas</th></tr></thead>
+  <tbody>${rows}</tbody></table></body></html>`;
+  const blob=new Blob([html],{type:'text/html'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='diario-cafe.html';a.click();
+  URL.revokeObjectURL(url);
+  setStatus('Abre el archivo → Ctrl+P → Guardar como PDF');
+  btn.disabled=false;btn.textContent='PDF';
+}
+
+// ── Service Worker ────────────────────────────────────────────────────
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(()=>console.log('SW registered'))
+      .catch(e=>console.log('SW error:',e));
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+loadLogs();renderRecipes();
+</script>
+</body>
+</html>
