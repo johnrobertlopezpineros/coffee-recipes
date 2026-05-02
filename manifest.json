@@ -4,8 +4,8 @@
   "description": "Recetas de café y registro de sesiones para Kingrinder K6",
   "start_url": "/coffee-recipes/",
   "display": "standalone",
-  "background_color": "#0f0d0b",
-  "theme_color": "#1a1612",
+  "background_color": "#faf7f4",
+  "theme_color": "#faf7f4",
   "orientation": "portrait-primary",
   "lang": "es",
   "icons": [
