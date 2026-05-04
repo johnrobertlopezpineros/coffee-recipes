@@ -199,7 +199,8 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+    getRedirectResult, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   const firebaseConfig = {
@@ -218,9 +219,42 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 
   let unsubscribe = null; // active Firestore listener
 
+  // ── Detect iOS / Safari (popup blocked) ──────────────────────────
+  function isMobileSafari() {
+    const ua = navigator.userAgent;
+    return /iP(hone|ad|od)/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+      /Safari/.test(ua) && !/Chrome/.test(ua);
+  }
+
+  // ── Handle redirect result on page load ──────────────────────────
+  getRedirectResult(auth).then(result => {
+    if (result && result.user) {
+      console.log('Redirect login OK:', result.user.email);
+    }
+  }).catch(err => {
+    console.error('Redirect result error:', err);
+    const el = document.getElementById('login-msg');
+    if (el) el.textContent = 'Error al iniciar sesion: ' + err.message;
+  });
+
   // ── Auth helpers ──────────────────────────────────────────────────
   window._auth = {
-    loginGoogle: () => signInWithPopup(auth, provider),
+    loginGoogle: function() {
+      if (isMobileSafari()) {
+        // Redirect flow for iOS/Safari (popups blocked)
+        return signInWithRedirect(auth, provider);
+      } else {
+        // Popup flow for desktop/Chrome
+        return signInWithPopup(auth, provider).catch(function(err) {
+          // Fallback to redirect if popup is blocked
+          if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+            return signInWithRedirect(auth, provider);
+          }
+          throw err;
+        });
+      }
+    },
     logout: () => signOut(auth),
     onUserChange(cb) { onAuthStateChanged(auth, cb); }
   };
@@ -509,10 +543,17 @@ function loadCache(uid){
 
 // ── Login / Logout ────────────────────────────────────────────────────
 function loginGoogle(){
-  document.getElementById('login-msg').textContent = 'Abriendo Google…';
-  window._auth.loginGoogle().catch(function(e){
-    document.getElementById('login-msg').textContent = 'Error: ' + e.message;
-  });
+  const msg = document.getElementById('login-msg');
+  msg.textContent = 'Abriendo Google…';
+  const result = window._auth.loginGoogle();
+  // signInWithRedirect returns undefined, signInWithPopup returns a promise
+  if (result && result.catch) {
+    result.catch(function(e){
+      msg.textContent = 'Error: ' + e.message;
+      console.error(e);
+    });
+  }
+  // If redirect, browser will navigate away — no further handling needed
 }
 function doLogout(){
   if(!confirm('Cerrar sesion?')) return;
