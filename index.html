@@ -27,121 +27,139 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:14px;line-height:1.5;display:flex;flex-direction:column}
+body{background:var(--bg);color:var(--text);font-family:'DM Mono',monospace;font-size:17px;line-height:1.5;display:flex;flex-direction:column}
 
 header{padding:calc(var(--safe-top) + 14px) 1.25rem 12px;border-bottom:0.5px solid var(--border);background:var(--bg);flex-shrink:0}
 .header-inner{display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
-h1{font-family:'DM Serif Display',serif;font-size:1.45rem;font-weight:400;color:var(--text)}
+h1{font-family:'DM Serif Display',serif;font-size:2rem;font-weight:400;color:var(--text)}
 h1 span{color:var(--accent);font-style:italic}
-.header-meta{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
+.header-meta{font-size:13px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase}
 
 .tab-bar{display:flex;border-bottom:0.5px solid var(--border);background:var(--bg);flex-shrink:0}
-.tab-btn{flex:1;padding:11px 0;font-size:11px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;border-bottom:1.5px solid transparent;color:var(--text3);cursor:pointer;transition:all .18s}
+.tab-btn{flex:1;padding:14px 0;font-size:15px;font-family:'DM Mono',monospace;font-weight:400;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:none;border-bottom:1.5px solid transparent;color:var(--text3);cursor:pointer;transition:all .18s}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
 
 .tab-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .tab-pane{display:none;padding:1rem 1rem calc(var(--safe-bottom) + 1.5rem)}
 .tab-pane.active{display:block}
 
-.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1rem}
-.filter-label{font-size:10px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;width:100%;margin-bottom:2px}
-.filter-btn{padding:4px 10px;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.04em;border-radius:2px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s}
+/* Filters */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-label{font-size:13px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;width:100%;margin-bottom:3px}
+.filter-btn{padding:7px 14px;font-size:13px;font-family:'DM Mono',monospace;letter-spacing:.04em;border-radius:3px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s}
 .filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
-.recipes-grid{display:grid;grid-template-columns:1fr;gap:9px}
+/* Grid */
+.recipes-grid{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:560px){.recipes-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:860px){.recipes-grid{grid-template-columns:repeat(3,1fr)}}
 
-.recipe-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;padding:.9rem 1rem;cursor:pointer;transition:border-color .15s}
+/* Card */
+.recipe-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .15s}
 .recipe-card.expanded{border-color:var(--accent2)}
-.card-method{font-size:10px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px}
-.card-title{font-family:'DM Serif Display',serif;font-size:.95rem;font-weight:400;color:var(--text);margin-bottom:2px;line-height:1.3}
-.card-desc{font-size:11px;color:var(--text3);margin-top:1px}
+.card-method{font-size:13px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:3px}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.2rem;font-weight:400;color:var(--text);margin-bottom:3px;line-height:1.3}
+.card-desc{font-size:14px;color:var(--text3);margin-top:1px}
 .card-header-row{display:flex;justify-content:space-between;align-items:flex-start}
-.expand-icon{font-size:13px;color:var(--text3);margin-left:6px;flex-shrink:0;transition:transform .2s;margin-top:3px}
+.expand-icon{font-size:14px;color:var(--text3);margin-left:6px;flex-shrink:0;transition:transform .2s;margin-top:3px}
 .recipe-card.expanded .expand-icon{transform:rotate(180deg);color:var(--accent)}
 
-.selectors-row{display:flex;gap:10px;margin-top:9px;flex-wrap:wrap}
-.selector-group{display:flex;flex-direction:column;gap:4px}
-.selector-label{font-size:10px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+/* Selectors */
+.selectors-row{display:flex;gap:12px;margin-top:11px;flex-wrap:wrap;align-items:flex-end}
+.selector-group{display:flex;flex-direction:column;gap:5px}
+.selector-label{font-size:13px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+
+/* Dose input — flexible number field */
+.dose-input-wrap{display:flex;align-items:center;gap:5px}
+.dose-input{width:62px;font-size:16px;font-family:'DM Mono',monospace;font-weight:500;padding:5px 7px;border:0.5px solid var(--border2);border-radius:3px;background:var(--bg);color:var(--text);text-align:center;-webkit-appearance:none;appearance:none}
+.dose-input:focus{outline:none;border-color:var(--accent)}
+.dose-unit{font-size:15px;color:var(--text3)}
+/* Stepper buttons */
+.dose-step{width:30px;height:30px;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;border:0.5px solid var(--border2);border-radius:3px;background:var(--bg);color:var(--text2);cursor:pointer;user-select:none;flex-shrink:0}
+.dose-step:active{background:var(--bg3)}
+
+/* Ratio buttons */
 .selector-btns{display:flex;gap:4px}
-.sel-btn{padding:4px 9px;font-size:11px;font-family:'DM Mono',monospace;border-radius:2px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .13s}
+.sel-btn{padding:6px 12px;font-size:13px;font-family:'DM Mono',monospace;border-radius:3px;border:0.5px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;transition:all .13s}
 .sel-btn.active{background:var(--bg3);color:var(--text);border-color:var(--border2)}
 
-.stats-row{display:flex;gap:5px;margin-top:9px}
-.stat-pill{display:flex;flex-direction:column;align-items:center;background:var(--bg);border:0.5px solid var(--border);border-radius:3px;padding:6px 8px;flex:1}
-.stat-val{font-size:14px;font-weight:500;color:var(--text)}
-.stat-key{font-size:9px;color:var(--text3);margin-top:2px;letter-spacing:.04em;text-align:center}
+/* Stats */
+.stats-row{display:flex;gap:6px;margin-top:10px}
+.stat-pill{display:flex;flex-direction:column;align-items:center;background:var(--bg);border:0.5px solid var(--border);border-radius:4px;padding:8px 6px;flex:1}
+.stat-val{font-size:17px;font-weight:500;color:var(--text)}
+.stat-key{font-size:12px;color:var(--text3);margin-top:2px;letter-spacing:.04em;text-align:center}
 
-.detail-section{margin-top:9px;padding-top:9px;border-top:0.5px solid var(--border);animation:fadeIn .2s ease}
+/* Detail */
+.detail-section{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);animation:fadeIn .2s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .steps-list{list-style:none}
-.step-item{display:flex;gap:7px;align-items:flex-start;padding:5px 0;border-bottom:0.5px solid var(--border);font-size:11px;color:var(--text2)}
+.step-item{display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:14px;color:var(--text2)}
 .step-item:last-child{border-bottom:none}
-.step-num{font-size:10px;color:var(--accent);background:var(--bg2);border:0.5px solid var(--accent2);border-radius:2px;width:17px;height:17px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step-time{font-size:10px;color:var(--text3);margin-left:auto;padding-left:7px;white-space:nowrap}
-.time-total-row{display:flex;justify-content:space-between;margin-top:8px;margin-bottom:3px;font-size:10px}
+.step-num{font-size:11px;color:var(--accent);background:var(--bg2);border:0.5px solid var(--accent2);border-radius:3px;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-time{font-size:13px;color:var(--text3);margin-left:auto;padding-left:8px;white-space:nowrap}
+.time-total-row{display:flex;justify-content:space-between;margin-top:9px;margin-bottom:3px;font-size:14px}
 .time-total-row span:first-child{color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
 .time-total-row span:last-child{color:var(--text);font-weight:500}
-.notes-box{font-size:11px;color:var(--text2);background:var(--bg);border-radius:3px;padding:7px 9px;margin-top:7px;border-left:1.5px solid var(--accent2)}
+.notes-box{font-size:13px;color:var(--text2);background:var(--bg);border-radius:3px;padding:8px 10px;margin-top:8px;border-left:1.5px solid var(--accent2)}
 
 /* Log form */
-.log-form{background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;padding:1.1rem;margin-bottom:.85rem}
-.form-title{font-family:'DM Serif Display',serif;font-size:.95rem;font-weight:400;margin-bottom:.9rem;color:var(--text)}
-.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-.form-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
-.form-group label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
+.log-form{background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:1.2rem;margin-bottom:.9rem}
+.form-title{font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:400;margin-bottom:1rem;color:var(--text)}
+.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.form-group{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px}
+.form-group label{font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em}
 .form-group select,.form-group input,.form-group textarea{
-  font-size:13px;font-family:'DM Mono',monospace;
-  padding:7px 9px;border:0.5px solid var(--border2);border-radius:3px;
+  font-size:16px;font-family:'DM Mono',monospace;
+  padding:8px 10px;border:0.5px solid var(--border2);border-radius:4px;
   background:var(--bg);color:var(--text);width:100%;
   -webkit-appearance:none;appearance:none;transition:border-color .15s;
 }
 .form-group select:focus,.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
-.form-group textarea{resize:vertical;min-height:56px}
+.form-group textarea{resize:vertical;min-height:58px}
 .full-row{flex-basis:100%;min-width:100%}
 
-.form-section{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin:12px 0 8px;padding-top:10px;border-top:0.5px solid var(--border)}
+.form-section{font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:.09em;margin:14px 0 9px;padding-top:11px;border-top:0.5px solid var(--border)}
 
 /* Sliders */
-.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:10px}
+.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;margin-bottom:12px}
 @media(min-width:480px){.slider-grid{grid-template-columns:repeat(3,1fr)}}
-.slider-group{display:flex;flex-direction:column;gap:5px}
+.slider-group{display:flex;flex-direction:column;gap:6px}
 .slider-label-row{display:flex;justify-content:space-between;align-items:baseline}
-.slider-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
-.slider-val{font-size:12px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace}
+.slider-label{font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.slider-val{font-size:15px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--border2);outline:none;cursor:pointer}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--bg)}
 
-.score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.score-row label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.score-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.score-row label{font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
 .score-row input[type=range]{flex:1}
-.score-display{font-size:16px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace;min-width:36px;text-align:right}
+.score-display{font-size:18px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace;min-width:38px;text-align:right}
 
-.btn-row{display:flex;gap:7px;margin-top:8px}
-.submit-btn{flex:1;padding:10px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.07em;text-transform:uppercase;border:0.5px solid var(--accent);border-radius:3px;background:var(--accent);color:#fff;cursor:pointer;transition:opacity .15s}
+.btn-row{display:flex;gap:8px;margin-top:9px}
+.submit-btn{flex:1;padding:13px;font-size:15px;font-family:'DM Mono',monospace;letter-spacing:.07em;text-transform:uppercase;border:0.5px solid var(--accent);border-radius:4px;background:var(--accent);color:#fff;cursor:pointer;transition:opacity .15s}
 .submit-btn:active{opacity:.75}
-.export-btn{padding:10px 14px;font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase;border:0.5px solid var(--border2);border-radius:3px;background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.export-btn{padding:13px 16px;font-size:15px;font-family:'DM Mono',monospace;letter-spacing:.06em;text-transform:uppercase;border:0.5px solid var(--border2);border-radius:4px;background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;white-space:nowrap}
 .export-btn:disabled{opacity:.3;cursor:not-allowed}
-.status-msg{font-size:11px;color:var(--accent);margin-top:7px;min-height:15px;text-align:center;letter-spacing:.04em}
+.status-msg{font-size:14px;color:var(--accent);margin-top:8px;min-height:16px;text-align:center;letter-spacing:.04em}
 
-.log-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
-.log-header-bar h3{font-family:'DM Serif Display',serif;font-size:.95rem;font-weight:400;color:var(--text)}
-.log-list{display:flex;flex-direction:column;gap:7px}
-.log-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:4px;padding:.85rem 1rem}
-.log-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
-.log-title{font-size:13px;font-weight:500;color:var(--text)}
-.log-bean{font-size:12px;color:var(--accent);font-style:italic;margin-top:2px}
-.log-meta{font-size:11px;color:var(--text3);margin-top:2px}
-.log-score{font-size:14px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace;white-space:nowrap}
-.log-descriptors{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
-.desc-pill{font-size:10px;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:2px 8px;color:var(--text2)}
-.log-notes{font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5}
-.delete-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text3);padding:3px 6px;border-radius:2px;flex-shrink:0;margin-left:6px}
+/* Log list */
+.log-header-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.log-header-bar h3{font-family:'DM Serif Display',serif;font-size:1.1rem;font-weight:400;color:var(--text)}
+.log-list{display:flex;flex-direction:column;gap:8px}
+.log-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:6px;padding:.95rem 1.1rem}
+.log-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.log-title{font-size:15px;font-weight:500;color:var(--text)}
+.log-bean{font-size:14px;color:var(--accent);font-style:italic;margin-top:2px}
+.log-meta{font-size:13px;color:var(--text3);margin-top:2px}
+.log-score{font-size:17px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace;white-space:nowrap}
+.log-descriptors{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.desc-pill{font-size:12px;background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:3px 9px;color:var(--text2)}
+.log-notes{font-size:14px;color:var(--text2);margin-top:6px;line-height:1.5}
+.delete-btn{background:none;border:none;cursor:pointer;font-size:15px;color:var(--text3);padding:3px 6px;border-radius:3px;flex-shrink:0;margin-left:8px}
 .delete-btn:active{color:#c0392b}
-.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3);font-size:13px;line-height:1.9}
-.empty-state em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--text2);font-size:1rem}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3);font-size:15px;line-height:1.9}
+.empty-state em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--text2);font-size:1.1rem}
 </style>
 </head>
 <body>
@@ -160,6 +178,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 <div class="tab-content">
 
+  <!-- RECETAS -->
   <div id="pane-recipes" class="tab-pane active">
     <div class="filters">
       <span class="filter-label">Filtrar por método</span>
@@ -176,6 +195,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <div class="recipes-grid" id="recipes-grid"></div>
   </div>
 
+  <!-- REGISTRO -->
   <div id="pane-log" class="tab-pane">
     <div class="log-form">
       <div class="form-title">Nueva sesión</div>
@@ -191,27 +211,31 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
           </select>
         </div>
         <div class="form-group">
-          <label>Dosis</label>
-          <select id="log-dose">
-            <option value="15">15g</option>
-            <option value="18" selected>18g</option>
-            <option value="30">30g</option>
-          </select>
-        </div>
-        <div class="form-group">
           <label>Ratio</label>
           <select id="log-ratio">
+            <option value="14">1:14</option>
             <option value="15">1:15</option>
             <option value="16" selected>1:16</option>
             <option value="17">1:17</option>
+            <option value="18">1:18</option>
           </select>
         </div>
       </div>
 
+      <!-- Dosis flexible -->
       <div class="form-row">
-        <div class="form-group full-row">
+        <div class="form-group">
+          <label>Dosis de café</label>
+          <div class="dose-input-wrap">
+            <button class="dose-step" onclick="stepDoseLog(-1)">−</button>
+            <input type="number" id="log-dose-input" value="18" min="1" max="60" inputmode="numeric" class="dose-input">
+            <button class="dose-step" onclick="stepDoseLog(1)">+</button>
+            <span class="dose-unit">g</span>
+          </div>
+        </div>
+        <div class="form-group">
           <label>Nombre del café</label>
-          <input type="text" id="log-bean" placeholder="Ej: Papayo Honey, Castillo Lavado, Etiopía Natural…">
+          <input type="text" id="log-bean" placeholder="Ej: Papayo Honey…">
         </div>
       </div>
 
@@ -223,6 +247,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
         <div class="form-group">
           <label>Temperatura</label>
           <input type="text" id="log-temp" placeholder="Ej: 91°C">
+        </div>
+        <div class="form-group">
+          <label>Tiempo final</label>
+          <input type="text" id="log-time" placeholder="Ej: 3:45">
         </div>
       </div>
 
@@ -278,74 +306,173 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 </div>
 
 <script>
-const DOSES=[15,18,30],RATIOS_OPT=[15,16,17];
+const RATIOS_OPT=[14,15,16,17,18];
 const DESCRIPTORS=['acidez','dulzor','cuerpo','residuo','aroma'];
 const calcWater=(d,r)=>d*r, calcBloom=d=>Math.round(d*2);
 
 const RECIPES=[
-  {id:1,method:'V60 Switch',name:'Switch — inmersión + percolación',desc:'Empieza cerrado para extracción profunda, abre para filtrar.',temp:'91°C',clicks:{15:102,18:105,30:108},totalTime:'3:30 – 4:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[{t:'0:00',s:`Bloom: ${b}ml en espiral. Switch cerrado.`},{t:'0:30',s:`Vierte hasta ${Math.round(w*.5)}ml. Circular.`},{t:'1:30',s:`Completa hasta ${w}ml. Agita suave.`},{t:'2:00',s:'Abre el switch. Deja drenar.'},{t:'3:30',s:'Goteo termina ~3:30–4:00 min.'}]},
+  {id:1,method:'V60 Switch',name:'Switch — inmersión + percolación',desc:'Empieza cerrado para extracción profunda, abre para filtrar.',temp:'91°C',
+   baseClicks:105, totalTime:'3:30 – 4:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml en espiral. Switch cerrado.`},
+    {t:'0:30',s:`Vierte hasta ${Math.round(w*.5)}ml. Circular.`},
+    {t:'1:30',s:`Completa hasta ${w}ml. Agita suave.`},
+    {t:'2:00',s:'Abre el switch. Deja drenar.'},
+    {t:'3:30',s:'Goteo termina ~3:30–4:00 min.'}]},
    notes:'Clicks actuales: 105 (probando 102). El switch cerrado da mayor contacto café-agua antes del filtrado.'},
-  {id:2,method:'V60 Tradicional',name:'V60 — vertido clásico',desc:'Percolación continua. Control total del flujo.',temp:'91°C',clicks:{15:95,18:98,30:102},totalTime:'2:30 – 3:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[{t:'0:00',s:`Bloom: ${b}ml. Espera 30 seg.`},{t:'0:30',s:`Vierte hasta ${Math.round(w*.45)}ml en espiral.`},{t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml. Flujo delgado.`},{t:'1:45',s:`Tercera hasta ${w}ml.`},{t:'2:45',s:'Goteo completo. Retira el V60.'}]},
+  {id:2,method:'V60 Tradicional',name:'V60 — vertido clásico',desc:'Percolación continua. Control total del flujo.',temp:'91°C',
+   baseClicks:98, totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml. Espera 30 seg.`},
+    {t:'0:30',s:`Vierte hasta ${Math.round(w*.45)}ml en espiral.`},
+    {t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml. Flujo delgado.`},
+    {t:'1:45',s:`Tercera hasta ${w}ml.`},
+    {t:'2:45',s:'Goteo completo. Retira el V60.'}]},
    notes:'Molienda ligeramente más fina que el Switch. Bloom sin expansión = café oxidado.'},
-  {id:3,method:'V60 Neo Tritan',name:'Neo Tritan — mayor retención de calor',desc:'Misma técnica V60, plástico de alto rendimiento.',temp:'91°C',clicks:{15:105,18:107,30:110},totalTime:'2:30 – 3:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[{t:'0:00',s:`Precalienta bien. Bloom: ${b}ml.`},{t:'0:35',s:`Vierte hasta ${Math.round(w*.45)}ml. Circular suave.`},{t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml.`},{t:'1:50',s:`Completa hasta ${w}ml.`},{t:'2:45',s:'Goteo completo.'}]},
+  {id:3,method:'V60 Neo Tritan',name:'Neo Tritan — mayor retención de calor',desc:'Misma técnica V60, plástico de alto rendimiento.',temp:'91°C',
+   baseClicks:107, totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Precalienta bien. Bloom: ${b}ml.`},
+    {t:'0:35',s:`Vierte hasta ${Math.round(w*.45)}ml. Circular suave.`},
+    {t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml.`},
+    {t:'1:50',s:`Completa hasta ${w}ml.`},
+    {t:'2:45',s:'Goteo completo.'}]},
    notes:'Tus clicks: 105–110. Retiene más temperatura que cerámica o vidrio.'},
-  {id:4,method:'Aeropress',name:'Aeropress — extracción rápida',desc:'Presión + tiempo corto. Perfil concentrado.',temp:'91°C',clicks:{15:95,18:98,30:100},totalTime:'1:30 – 2:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r);return[{t:'0:00',s:'Precalienta y humedece el filtro.'},{t:'0:10',s:`Agrega ${d}g. Vierte ${w}ml a 91°C.`},{t:'0:20',s:'Revuelve 3–4 veces. Coloca el émbolo.'},{t:'1:00',s:'Presiona lentamente en 30 seg.'},{t:'1:30',s:'Para al sentir resistencia.'}]},
+  {id:4,method:'Aeropress',name:'Aeropress — extracción rápida',desc:'Presión + tiempo corto. Perfil concentrado.',temp:'91°C',
+   baseClicks:98, totalTime:'1:30 – 2:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:'Precalienta y humedece el filtro.'},
+    {t:'0:10',s:`Agrega ${d}g. Vierte ${w}ml a 91°C.`},
+    {t:'0:20',s:'Revuelve 3–4 veces. Coloca el émbolo.'},
+    {t:'1:00',s:'Presiona lentamente en 30 seg.'},
+    {t:'1:30',s:'Para al sentir resistencia.'}]},
    notes:'Tus clicks: 98. Experimenta ±5 clicks sin miedo.'},
-  {id:5,method:'Origami',name:'Origami — percolación elegante',desc:'Copa ancha. Perfil brillante y ácido.',temp:'91°C',clicks:{15:93,18:96,30:100},totalTime:'2:30 – 3:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[{t:'0:00',s:`Bloom: ${b}ml. Espera 35 seg.`},{t:'0:35',s:`Vierte hasta ${Math.round(w*.5)}ml circular amplio.`},{t:'1:15',s:`Segunda hasta ${Math.round(w*.75)}ml.`},{t:'1:50',s:`Final hasta ${w}ml.`},{t:'2:45',s:'Cama plana = buena distribución.'}]},
+  {id:5,method:'Origami',name:'Origami — percolación elegante',desc:'Copa ancha. Perfil brillante y ácido.',temp:'91°C',
+   baseClicks:96, totalTime:'2:30 – 3:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Bloom: ${b}ml. Espera 35 seg.`},
+    {t:'0:35',s:`Vierte hasta ${Math.round(w*.5)}ml circular amplio.`},
+    {t:'1:15',s:`Segunda hasta ${Math.round(w*.75)}ml.`},
+    {t:'1:50',s:`Final hasta ${w}ml.`},
+    {t:'2:45',s:'Cama plana = buena distribución.'}]},
    notes:'Apertura más amplia da perfil más brillante que el V60.'},
-  {id:6,method:'Chemex',name:'Chemex — cuerpo limpio y elegante',desc:'Filtro grueso. Taza muy limpia.',temp:'92°C',clicks:{15:88,18:92,30:98},totalTime:'4:00 – 4:30 min',
-   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[{t:'0:00',s:`Pre-humedece el filtro. Bloom: ${b}ml.`},{t:'0:45',s:`Primera hasta ${Math.round(w*.4)}ml.`},{t:'1:30',s:`Segunda hasta ${Math.round(w*.7)}ml.`},{t:'2:30',s:`Tercera hasta ${w}ml.`},{t:'4:15',s:'Goteo completo.'}]},
+  {id:6,method:'Chemex',name:'Chemex — cuerpo limpio y elegante',desc:'Filtro grueso. Taza muy limpia.',temp:'92°C',
+   baseClicks:92, totalTime:'4:00 – 4:30 min',
+   steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
+    {t:'0:00',s:`Pre-humedece el filtro. Bloom: ${b}ml.`},
+    {t:'0:45',s:`Primera hasta ${Math.round(w*.4)}ml.`},
+    {t:'1:30',s:`Segunda hasta ${Math.round(w*.7)}ml.`},
+    {t:'2:30',s:`Tercera hasta ${w}ml.`},
+    {t:'4:15',s:'Goteo completo.'}]},
    notes:'Molienda más gruesa por el filtro Chemex. +1°C compensa el tiempo extra.'},
-  {id:7,method:'Prensa Francesa',name:'Prensa Francesa — cuerpo completo',desc:'Inmersión total sin filtro. Máximo cuerpo.',temp:'92°C',clicks:{15:120,18:125,30:130},totalTime:'4:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r);return[{t:'0:00',s:`${d}g molido grueso. Vierte ${w}ml.`},{t:'0:20',s:'Revuelve suavemente.'},{t:'0:30',s:'Émbolo sin presionar. Espera 4 min.'},{t:'4:00',s:'Presiona hasta la mitad, no el fondo.'},{t:'4:15',s:'Sirve inmediatamente.'}]},
+  {id:7,method:'Prensa Francesa',name:'Prensa Francesa — cuerpo completo',desc:'Inmersión total sin filtro. Máximo cuerpo.',temp:'92°C',
+   baseClicks:125, totalTime:'4:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:`${d}g molido grueso. Vierte ${w}ml.`},
+    {t:'0:20',s:'Revuelve suavemente.'},
+    {t:'0:30',s:'Émbolo sin presionar. Espera 4 min.'},
+    {t:'4:00',s:'Presiona hasta la mitad, no el fondo.'},
+    {t:'4:15',s:'Sirve inmediatamente.'}]},
    notes:'Amargo = sube clicks. Aguado = baja clicks.'},
-  {id:8,method:'Sifón Japonés',name:'Sifón Japonés — claridad y espectáculo',desc:'Vacío + vapor. Claridad inusual para inmersión.',temp:'93°C',clicks:{15:90,18:93,30:97},totalTime:'5:00 – 6:00 min',
-   steps:(d,r)=>{const w=calcWater(d,r);return[{t:'0:00',s:`Cámara inferior con ${w}ml. Enciende el fuego.`},{t:'2:00',s:'El agua sube. Agrega el café.'},{t:'2:15',s:`Revuelve ${d}g. Fuego bajo.`},{t:'3:15',s:'Retira el calor. El vacío jala el café.'},{t:'4:30',s:'Espera que drene completamente.'},{t:'5:30',s:'Sirve desde la cámara inferior.'}]},
+  {id:8,method:'Sifón Japonés',name:'Sifón Japonés — claridad y espectáculo',desc:'Vacío + vapor. Claridad inusual para inmersión.',temp:'93°C',
+   baseClicks:93, totalTime:'5:00 – 6:00 min',
+   steps:(d,r)=>{const w=calcWater(d,r);return[
+    {t:'0:00',s:`Cámara inferior con ${w}ml. Enciende el fuego.`},
+    {t:'2:00',s:'El agua sube. Agrega el café.'},
+    {t:'2:15',s:`Revuelve ${d}g. Fuego bajo.`},
+    {t:'3:15',s:'Retira el calor. El vacío jala el café.'},
+    {t:'4:30',s:'Espera que drene completamente.'},
+    {t:'5:30',s:'Sirve desde la cámara inferior.'}]},
    notes:'Molienda media-fina. Más setup, pero claridad extraordinaria en taza.'}
 ];
 
-let currentFilter='all',expandedId=null,selectedDoses={},selectedRatios={},logs=[];
+// ── State ─────────────────────────────────────────────────────────────
+let currentFilter='all', expandedId=null;
+let selectedDoses={}, selectedRatios={};
+let logs=[];
 
-function loadLogs(){try{const d=localStorage.getItem('cafe_logs_v3');if(d)logs=JSON.parse(d);}catch(e){logs=[];}}
-function saveLogs(){try{localStorage.setItem('cafe_logs_v3',JSON.stringify(logs));}catch(e){}}
+// ── Storage ───────────────────────────────────────────────────────────
+function loadLogs(){try{const d=localStorage.getItem('cafe_logs_v4');if(d)logs=JSON.parse(d);}catch(e){logs=[];}}
+function saveLogs(){try{localStorage.setItem('cafe_logs_v4',JSON.stringify(logs));}catch(e){}}
 
+// ── Helpers ───────────────────────────────────────────────────────────
 function updateSlider(n){document.getElementById('val-'+n).textContent=document.getElementById('sl-'+n).value;}
 function updateScore(){document.getElementById('val-score').textContent=parseFloat(document.getElementById('sl-score').value).toFixed(1);}
 function getDescriptors(){const o={};DESCRIPTORS.forEach(d=>o[d]=parseInt(document.getElementById('sl-'+d).value));return o;}
+
+function stepDoseLog(delta){
+  const el=document.getElementById('log-dose-input');
+  const val=Math.min(60,Math.max(1,(parseInt(el.value)||18)+delta));
+  el.value=val;
+}
+function stepDoseCard(id, delta){
+  const el=document.getElementById('dose-input-'+id);
+  const val=Math.min(60,Math.max(1,(parseInt(el.value)||18)+delta));
+  el.value=val;
+  selectedDoses[id]=val;
+  renderRecipes();
+}
+function onDoseCardChange(id){
+  const el=document.getElementById('dose-input-'+id);
+  const val=Math.min(60,Math.max(1,parseInt(el.value)||18));
+  el.value=val;
+  selectedDoses[id]=val;
+  renderRecipes();
+}
+
 function resetForm(){
-  ['log-bean','log-clicks','log-temp','log-notes'].forEach(id=>document.getElementById(id).value='');
+  ['log-bean','log-clicks','log-temp','log-time','log-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('log-dose-input').value=18;
   DESCRIPTORS.forEach(d=>{document.getElementById('sl-'+d).value=5;updateSlider(d);});
   document.getElementById('sl-score').value=7;updateScore();
 }
 
+// ── Recipes ───────────────────────────────────────────────────────────
 function renderRecipes(){
   const grid=document.getElementById('recipes-grid');
   const filtered=currentFilter==='all'?RECIPES:RECIPES.filter(r=>r.method===currentFilter);
   grid.innerHTML=filtered.map(recipe=>{
-    const dose=selectedDoses[recipe.id]||18,ratio=selectedRatios[recipe.id]||16;
-    const w=calcWater(dose,ratio),clicks=recipe.clicks[dose],isExp=expandedId===recipe.id;
+    const dose = selectedDoses[recipe.id] || 18;
+    const ratio = selectedRatios[recipe.id] || 16;
+    const w = calcWater(dose, ratio);
+    const isExp = expandedId===recipe.id;
+
     return `<div class="recipe-card${isExp?' expanded':''}" id="card-${recipe.id}">
       <div onclick="toggleExpand(${recipe.id})">
         <div class="card-header-row">
-          <div><div class="card-method">${recipe.method}</div><div class="card-title">${recipe.name}</div><div class="card-desc">${recipe.desc}</div></div>
+          <div>
+            <div class="card-method">${recipe.method}</div>
+            <div class="card-title">${recipe.name}</div>
+            <div class="card-desc">${recipe.desc}</div>
+          </div>
           <span class="expand-icon">${isExp?'▲':'▼'}</span>
         </div>
       </div>
+
       <div class="selectors-row" onclick="event.stopPropagation()">
-        <div class="selector-group"><div class="selector-label">Dosis</div><div class="selector-btns">${DOSES.map(d=>`<button class="sel-btn${dose===d?' active':''}" onclick="setDose(${recipe.id},${d})">${d}g</button>`).join('')}</div></div>
-        <div class="selector-group"><div class="selector-label">Ratio</div><div class="selector-btns">${RATIOS_OPT.map(r=>`<button class="sel-btn${ratio===r?' active':''}" onclick="setRatio(${recipe.id},${r})">1:${r}</button>`).join('')}</div></div>
+        <div class="selector-group">
+          <div class="selector-label">Dosis</div>
+          <div class="dose-input-wrap">
+            <button class="dose-step" onclick="stepDoseCard(${recipe.id},-1)">−</button>
+            <input class="dose-input" id="dose-input-${recipe.id}" type="number" value="${dose}" min="1" max="60" inputmode="numeric"
+              onchange="onDoseCardChange(${recipe.id})" oninput="onDoseCardChange(${recipe.id})">
+            <button class="dose-step" onclick="stepDoseCard(${recipe.id},1)">+</button>
+            <span class="dose-unit">g</span>
+          </div>
+        </div>
+        <div class="selector-group">
+          <div class="selector-label">Ratio</div>
+          <div class="selector-btns">${RATIOS_OPT.map(r=>`<button class="sel-btn${ratio===r?' active':''}" onclick="setRatio(${recipe.id},${r})">1:${r}</button>`).join('')}</div>
+        </div>
       </div>
+
       <div class="stats-row">
-        <div class="stat-pill"><span class="stat-val">${clicks}</span><span class="stat-key">Clicks K6</span></div>
+        <div class="stat-pill"><span class="stat-val">${recipe.baseClicks}</span><span class="stat-key">Clicks K6</span></div>
         <div class="stat-pill"><span class="stat-val">${w}ml</span><span class="stat-key">Agua</span></div>
         <div class="stat-pill"><span class="stat-val">${recipe.temp}</span><span class="stat-key">Temp.</span></div>
         <div class="stat-pill"><span class="stat-val">1:${ratio}</span><span class="stat-key">Ratio</span></div>
       </div>
+
       ${isExp?`<div class="detail-section">
         <ul class="steps-list">${recipe.steps(dose,ratio).map((s,i)=>`<li class="step-item"><span class="step-num">${i+1}</span><span>${s.s}</span><span class="step-time">${s.t}</span></li>`).join('')}</ul>
         <div class="time-total-row"><span>Tiempo total</span><span>${recipe.totalTime}</span></div>
@@ -354,26 +481,35 @@ function renderRecipes(){
     </div>`;
   }).join('');
 }
+
 function toggleExpand(id){expandedId=expandedId===id?null:id;renderRecipes();}
-function setDose(id,d){selectedDoses[id]=d;renderRecipes();}
 function setRatio(id,r){selectedRatios[id]=r;renderRecipes();}
-function setFilter(val,btn){currentFilter=val;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderRecipes();}
+function setFilter(val,btn){
+  currentFilter=val;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');renderRecipes();
+}
 function switchTab(tab){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('pane-'+tab).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(i===0&&tab==='recipes')||(i===1&&tab==='log')));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',
+    (i===0&&tab==='recipes')||(i===1&&tab==='log')));
   if(tab==='log')renderLogs();
 }
 
+// ── Log ───────────────────────────────────────────────────────────────
 function submitLog(){
+  const dose=parseInt(document.getElementById('log-dose-input').value)||18;
+  const ratio=parseInt(document.getElementById('log-ratio').value)||16;
   logs.unshift({
     id:Date.now(),
     method:document.getElementById('log-method').value,
-    dose:document.getElementById('log-dose').value,
-    ratio:document.getElementById('log-ratio').value,
+    dose, ratio,
+    water: calcWater(dose,ratio),
     bean:document.getElementById('log-bean').value.trim(),
     clicks:document.getElementById('log-clicks').value,
     temp:document.getElementById('log-temp').value,
+    brewTime:document.getElementById('log-time').value.trim(),
     descriptors:getDescriptors(),
     score:parseFloat(document.getElementById('sl-score').value),
     notes:document.getElementById('log-notes').value.trim(),
@@ -390,12 +526,13 @@ function renderLogs(){
   list.innerHTML=logs.map(l=>{
     const desc=l.descriptors||{};
     const pills=Object.entries(desc).map(([k,v])=>`<span class="desc-pill">${k} ${v}/10</span>`).join('');
+    const meta=[l.date, l.clicks?l.clicks+' clicks':null, l.temp||null, l.brewTime?'⏱ '+l.brewTime:null].filter(Boolean).join(' · ');
     return `<div class="log-item">
       <div class="log-item-header">
         <div style="flex:1;min-width:0">
-          <div class="log-title">${l.method} · ${l.dose}g · 1:${l.ratio||16}</div>
+          <div class="log-title">${l.method} · ${l.dose}g · 1:${l.ratio||16} · ${l.water||'—'}ml</div>
           ${l.bean?`<div class="log-bean">${l.bean}</div>`:''}
-          <div class="log-meta">${l.date}${l.clicks?' · '+l.clicks+' clicks':''}${l.temp?' · '+l.temp:''}</div>
+          <div class="log-meta">${meta}</div>
         </div>
         <div style="display:flex;align-items:center;flex-shrink:0">
           <span class="log-score">${(l.score||0).toFixed(1)}/10</span>
@@ -408,19 +545,28 @@ function renderLogs(){
   }).join('');
 }
 
+// ── Export PDF ─────────────────────────────────────────────────────────
 function exportPDF(){
   if(!logs.length){setStatus('No hay sesiones para exportar.');return;}
   const btn=document.getElementById('export-btn');btn.disabled=true;btn.textContent='...';
   const rows=logs.map(l=>{
     const desc=l.descriptors||{};
     const dStr=Object.entries(desc).map(([k,v])=>`${k}:${v}`).join(' · ');
-    return `<tr><td>${l.date}</td><td>${l.method}</td><td>${l.bean||'—'}</td><td>${l.dose}g·1:${l.ratio||16}</td><td>${l.clicks||'—'}</td><td>${l.temp||'—'}</td><td style="font-size:.75rem">${dStr||'—'}</td><td><strong>${(l.score||0).toFixed(1)}</strong></td><td>${l.notes||''}</td></tr>`;
+    return `<tr>
+      <td>${l.date}</td><td>${l.method}</td><td>${l.bean||'—'}</td>
+      <td>${l.dose}g · 1:${l.ratio||16}</td><td>${l.water||'—'}ml</td>
+      <td>${l.clicks||'—'}</td><td>${l.temp||'—'}</td>
+      <td>${l.brewTime||'—'}</td>
+      <td style="font-size:.75rem">${dStr||'—'}</td>
+      <td><strong>${(l.score||0).toFixed(1)}</strong></td>
+      <td>${l.notes||''}</td>
+    </tr>`;
   }).join('');
   const avg=(logs.reduce((a,l)=>a+(l.score||0),0)/logs.length).toFixed(1);
   const methods={};logs.forEach(l=>{methods[l.method]=(methods[l.method]||0)+1;});
   const top=Object.entries(methods).sort((a,b)=>b[1]-a[1])[0][0];
   const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-  body{font-family:Georgia,serif;color:#1c1714;max-width:980px;margin:0 auto;padding:2rem}
+  body{font-family:Georgia,serif;color:#1c1714;max-width:1000px;margin:0 auto;padding:2rem}
   h1{font-size:2rem;font-weight:400;margin-bottom:.2rem}.sub{color:#666;font-size:.85rem;margin-bottom:2rem}
   .stats{display:flex;gap:2rem;margin-bottom:2rem;padding:1rem;background:#f2ede7;border-radius:4px}
   .stat{display:flex;flex-direction:column}.stat-v{font-size:1.2rem;font-weight:500}
@@ -436,8 +582,10 @@ function exportPDF(){
     <div class="stat"><span class="stat-v">${avg}/10</span><span class="stat-k">Puntaje prom.</span></div>
     <div class="stat"><span class="stat-v">${top}</span><span class="stat-k">Método favorito</span></div>
   </div>
-  <table><thead><tr><th>Fecha</th><th>Método</th><th>Café</th><th>Dosis·Ratio</th><th>Clicks</th><th>Temp.</th><th>Descriptores</th><th>Score</th><th>Notas</th></tr></thead>
-  <tbody>${rows}</tbody></table></body></html>`;
+  <table><thead><tr>
+    <th>Fecha</th><th>Método</th><th>Café</th><th>Dosis·Ratio</th><th>Agua</th>
+    <th>Clicks</th><th>Temp.</th><th>Tiempo</th><th>Descriptores</th><th>Score</th><th>Notas</th>
+  </tr></thead><tbody>${rows}</tbody></table></body></html>`;
   const blob=new Blob([html],{type:'text/html'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='diario-cafe.html';a.click();
