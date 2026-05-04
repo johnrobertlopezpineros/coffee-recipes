@@ -160,7 +160,54 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .delete-btn:active{color:#c0392b}
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3);font-size:15px;line-height:1.9}
 .empty-state em{font-family:'DM Serif Display',serif;font-style:italic;color:var(--text2);font-size:1.1rem}
+
+#sync-indicator{transition:color .3s}
+#sync-indicator.ok{color:#6a8f5a}
+#sync-indicator.err{color:#b84040}
 </style>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_pW_EABJE72jsumPxNvq550yjKn4zuG0",
+    authDomain: "coffe-k6.firebaseapp.com",
+    projectId: "coffe-k6",
+    storageBucket: "coffe-k6.firebasestorage.app",
+    messagingSenderId: "389009786415",
+    appId: "1:389009786415:web:4442296d3bf608822568da"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  const col = collection(db, 'sessions');
+
+  // Expose DB helpers to global scope
+  window._fb = {
+    async save(entry) {
+      // Remove local id before saving — Firestore assigns its own
+      const { id, ...data } = entry;
+      const ref = await addDoc(col, data);
+      return ref.id;
+    },
+    async remove(firestoreId) {
+      await deleteDoc(doc(db, 'sessions', firestoreId));
+    },
+    listen(callback) {
+      const q = query(col, orderBy('timestamp', 'desc'));
+      return onSnapshot(q, snap => {
+        const docs = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        callback(docs);
+      });
+    }
+  };
+
+  // Signal that Firebase is ready
+  window.dispatchEvent(new Event('fb-ready'));
+</script>
 </head>
 <body>
 
@@ -168,6 +215,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   <div class="header-inner">
     <h1>Diario de <span>Café</span></h1>
     <span class="header-meta">K6 · V60 &amp; más</span>
+    <span id="sync-indicator" style="font-size:11px;color:var(--text3);letter-spacing:.04em;margin-left:auto">⏳ conectando…</span>
   </div>
 </header>
 
@@ -391,9 +439,49 @@ let currentFilter='all', expandedId=null;
 let selectedDoses={}, selectedRatios={};
 let logs=[];
 
-// ── Storage ───────────────────────────────────────────────────────────
-function loadLogs(){try{const d=localStorage.getItem('cafe_logs_v4');if(d)logs=JSON.parse(d);}catch(e){logs=[];}}
-function saveLogs(){try{localStorage.setItem('cafe_logs_v4',JSON.stringify(logs));}catch(e){}}
+// ── Storage — Firebase + localStorage fallback ────────────────────────
+function setSync(state, msg) {
+  const el = document.getElementById('sync-indicator');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = state; // 'ok' | 'err' | ''
+}
+
+// localStorage cache (offline support)
+function cacheLocal(data){ try{ localStorage.setItem('cafe_logs_v4', JSON.stringify(data)); }catch(e){} }
+function loadCache(){ try{ const d=localStorage.getItem('cafe_logs_v4'); return d?JSON.parse(d):[]; }catch(e){ return []; } }
+
+// Start Firebase listener when SDK is ready
+function initFirebase() {
+  setSync('', '⏳ conectando…');
+  window._fb.listen(docs => {
+    logs = docs;
+    cacheLocal(logs);
+    renderLogs();
+    setSync('ok', '☁ sincronizado');
+  });
+}
+
+// Called once on load
+function loadLogs(){
+  // Show cached data immediately while Firebase loads
+  logs = loadCache();
+  if (logs.length) renderLogs();
+
+  if (window._fb) {
+    initFirebase();
+  } else {
+    window.addEventListener('fb-ready', initFirebase);
+    // If Firebase never loads (offline), keep local cache
+    setTimeout(() => {
+      if (!window._fb) setSync('err', '✕ sin conexión');
+    }, 8000);
+  }
+}
+
+// saveLogs: write to Firestore (called by submitLog / deleteLog)
+// Individual ops replace bulk save
+function saveLogs(){ /* no-op — ops are done individually */ }
 
 // ── Helpers ───────────────────────────────────────────────────────────
 function updateSlider(n){document.getElementById('val-'+n).textContent=document.getElementById('sl-'+n).value;}
@@ -498,11 +586,12 @@ function switchTab(tab){
 }
 
 // ── Log ───────────────────────────────────────────────────────────────
-function submitLog(){
+async function submitLog(){
   const dose=parseInt(document.getElementById('log-dose-input').value)||18;
   const ratio=parseInt(document.getElementById('log-ratio').value)||16;
-  logs.unshift({
-    id:Date.now(),
+  const entry={
+    id: Date.now(),
+    timestamp: Date.now(),
     method:document.getElementById('log-method').value,
     dose, ratio,
     water: calcWater(dose,ratio),
@@ -514,10 +603,42 @@ function submitLog(){
     score:parseFloat(document.getElementById('sl-score').value),
     notes:document.getElementById('log-notes').value.trim(),
     date:new Date().toLocaleString('es-CO',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})
-  });
-  saveLogs();resetForm();setStatus('Sesión guardada ✓');renderLogs();
+  };
+  resetForm();
+  setStatus('Guardando…');
+  try {
+    if (window._fb) {
+      await window._fb.save(entry);
+      setStatus('Sesión guardada ✓');
+      // onSnapshot will refresh the list automatically
+    } else {
+      // Offline fallback: save only to localStorage
+      logs.unshift(entry);
+      cacheLocal(logs);
+      renderLogs();
+      setStatus('Guardado localmente (sin conexión)');
+    }
+  } catch(e) {
+    setStatus('Error al guardar. Intenta de nuevo.');
+    console.error(e);
+  }
 }
-function deleteLog(id){logs=logs.filter(l=>l.id!==id);saveLogs();renderLogs();}
+async function deleteLog(firestoreId, localId) {
+  if (!confirm('¿Eliminar esta sesión?')) return;
+  try {
+    if (window._fb && firestoreId) {
+      await window._fb.remove(firestoreId);
+      // onSnapshot refreshes the list
+    } else {
+      logs = logs.filter(l => l.id !== localId);
+      cacheLocal(logs);
+      renderLogs();
+    }
+  } catch(e) {
+    setStatus('Error al eliminar.');
+    console.error(e);
+  }
+}
 function setStatus(msg){const el=document.getElementById('status-msg');el.textContent=msg;setTimeout(()=>el.textContent='',3000);}
 
 function renderLogs(){
@@ -536,7 +657,7 @@ function renderLogs(){
         </div>
         <div style="display:flex;align-items:center;flex-shrink:0">
           <span class="log-score">${(l.score||0).toFixed(1)}/10</span>
-          <button class="delete-btn" onclick="deleteLog(${l.id})">✕</button>
+          <button class="delete-btn" onclick="deleteLog('${l.firestoreId||''}',${l.id})">✕</button>
         </div>
       </div>
       ${pills?`<div class="log-descriptors">${pills}</div>`:''}
@@ -574,7 +695,54 @@ function exportPDF(){
   table{width:100%;border-collapse:collapse;font-size:.78rem}
   th{text-align:left;padding:6px 8px;border-bottom:1.5px solid #1c1714;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#555}
   td{padding:5px 8px;border-bottom:0.5px solid #ddd;vertical-align:top}
-  tr:last-child td{border-bottom:none}@media print{body{padding:1rem}}</style></head><body>
+  tr:last-child td{border-bottom:none}@media print{body{padding:1rem}}
+#sync-indicator{transition:color .3s}
+#sync-indicator.ok{color:#6a8f5a}
+#sync-indicator.err{color:#b84040}
+</style>
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, onSnapshot }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA_pW_EABJE72jsumPxNvq550yjKn4zuG0",
+    authDomain: "coffe-k6.firebaseapp.com",
+    projectId: "coffe-k6",
+    storageBucket: "coffe-k6.firebasestorage.app",
+    messagingSenderId: "389009786415",
+    appId: "1:389009786415:web:4442296d3bf608822568da"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+  const col = collection(db, 'sessions');
+
+  // Expose DB helpers to global scope
+  window._fb = {
+    async save(entry) {
+      // Remove local id before saving — Firestore assigns its own
+      const { id, ...data } = entry;
+      const ref = await addDoc(col, data);
+      return ref.id;
+    },
+    async remove(firestoreId) {
+      await deleteDoc(doc(db, 'sessions', firestoreId));
+    },
+    listen(callback) {
+      const q = query(col, orderBy('timestamp', 'desc'));
+      return onSnapshot(q, snap => {
+        const docs = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
+        callback(docs);
+      });
+    }
+  };
+
+  // Signal that Firebase is ready
+  window.dispatchEvent(new Event('fb-ready'));
+</script>
+</head><body>
   <h1>Diario de Café</h1>
   <div class="sub">Exportado el ${new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})} · Kingrinder K6</div>
   <div class="stats">
