@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icons/icon-180x180.png">
 <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180x180.png">
-<title>Diario de Café — K6</title>
+<title>Diario de Café -- K6</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -69,7 +69,7 @@ h1 span{color:var(--accent);font-style:italic}
 .selector-group{display:flex;flex-direction:column;gap:5px}
 .selector-label{font-size:13px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
 
-/* Dose input — flexible number field */
+/* Dose input -- flexible number field */
 .dose-input-wrap{display:flex;align-items:center;gap:5px}
 .dose-input{width:62px;font-size:16px;font-family:'DM Mono',monospace;font-weight:500;padding:5px 7px;border:0.5px solid var(--border2);border-radius:3px;background:var(--bg);color:var(--text);text-align:center;-webkit-appearance:none;appearance:none}
 .dose-input:focus{outline:none;border-color:var(--accent)}
@@ -188,7 +188,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   // Expose DB helpers to global scope
   window._fb = {
     async save(entry) {
-      // Remove local id before saving — Firestore assigns its own
+      // Remove local id before saving -- Firestore assigns its own
       const { id, ...data } = entry;
       const ref = await addDoc(col, data);
       return ref.id;
@@ -359,17 +359,17 @@ const DESCRIPTORS=['acidez','dulzor','cuerpo','residuo','aroma'];
 const calcWater=(d,r)=>d*r, calcBloom=d=>Math.round(d*2);
 
 const RECIPES=[
-  {id:1,method:'V60 Switch',name:'Switch — inmersión + percolación',desc:'Empieza cerrado para extracción profunda, abre para filtrar.',temp:'91°C',
-   baseClicks:105, totalTime:'3:30 – 4:00 min',
+  {id:1,method:'V60 Switch',name:'Switch -- inmersión + percolación',desc:'Empieza cerrado para extracción profunda, abre para filtrar.',temp:'91°C',
+   baseClicks:105, totalTime:'3:30 - 4:00 min',
    steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
     {t:'0:00',s:`Bloom: ${b}ml en espiral. Switch cerrado.`},
     {t:'0:30',s:`Vierte hasta ${Math.round(w*.5)}ml. Circular.`},
     {t:'1:30',s:`Completa hasta ${w}ml. Agita suave.`},
     {t:'2:00',s:'Abre el switch. Deja drenar.'},
-    {t:'3:30',s:'Goteo termina ~3:30–4:00 min.'}]},
+    {t:'3:30',s:'Goteo termina ~3:30-4:00 min.'}]},
    notes:'Clicks actuales: 105 (probando 102). El switch cerrado da mayor contacto café-agua antes del filtrado.'},
-  {id:2,method:'V60 Tradicional',name:'V60 — vertido clásico',desc:'Percolación continua. Control total del flujo.',temp:'91°C',
-   baseClicks:98, totalTime:'2:30 – 3:00 min',
+  {id:2,method:'V60 Tradicional',name:'V60 -- vertido clásico',desc:'Percolación continua. Control total del flujo.',temp:'91°C',
+   baseClicks:98, totalTime:'2:30 - 3:00 min',
    steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
     {t:'0:00',s:`Bloom: ${b}ml. Espera 30 seg.`},
     {t:'0:30',s:`Vierte hasta ${Math.round(w*.45)}ml en espiral.`},
@@ -377,26 +377,26 @@ const RECIPES=[
     {t:'1:45',s:`Tercera hasta ${w}ml.`},
     {t:'2:45',s:'Goteo completo. Retira el V60.'}]},
    notes:'Molienda ligeramente más fina que el Switch. Bloom sin expansión = café oxidado.'},
-  {id:3,method:'V60 Neo Tritan',name:'Neo Tritan — mayor retención de calor',desc:'Misma técnica V60, plástico de alto rendimiento.',temp:'91°C',
-   baseClicks:107, totalTime:'2:30 – 3:00 min',
+  {id:3,method:'V60 Neo Tritan',name:'Neo Tritan -- mayor retención de calor',desc:'Misma técnica V60, plástico de alto rendimiento.',temp:'91°C',
+   baseClicks:107, totalTime:'2:30 - 3:00 min',
    steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
     {t:'0:00',s:`Precalienta bien. Bloom: ${b}ml.`},
     {t:'0:35',s:`Vierte hasta ${Math.round(w*.45)}ml. Circular suave.`},
     {t:'1:10',s:`Segunda hasta ${Math.round(w*.7)}ml.`},
     {t:'1:50',s:`Completa hasta ${w}ml.`},
     {t:'2:45',s:'Goteo completo.'}]},
-   notes:'Tus clicks: 105–110. Retiene más temperatura que cerámica o vidrio.'},
-  {id:4,method:'Aeropress',name:'Aeropress — extracción rápida',desc:'Presión + tiempo corto. Perfil concentrado.',temp:'91°C',
-   baseClicks:98, totalTime:'1:30 – 2:00 min',
+   notes:'Tus clicks: 105-110. Retiene más temperatura que cerámica o vidrio.'},
+  {id:4,method:'Aeropress',name:'Aeropress -- extracción rápida',desc:'Presión + tiempo corto. Perfil concentrado.',temp:'91°C',
+   baseClicks:98, totalTime:'1:30 - 2:00 min',
    steps:(d,r)=>{const w=calcWater(d,r);return[
     {t:'0:00',s:'Precalienta y humedece el filtro.'},
     {t:'0:10',s:`Agrega ${d}g. Vierte ${w}ml a 91°C.`},
-    {t:'0:20',s:'Revuelve 3–4 veces. Coloca el émbolo.'},
+    {t:'0:20',s:'Revuelve 3-4 veces. Coloca el émbolo.'},
     {t:'1:00',s:'Presiona lentamente en 30 seg.'},
     {t:'1:30',s:'Para al sentir resistencia.'}]},
    notes:'Tus clicks: 98. Experimenta ±5 clicks sin miedo.'},
-  {id:5,method:'Origami',name:'Origami — percolación elegante',desc:'Copa ancha. Perfil brillante y ácido.',temp:'91°C',
-   baseClicks:96, totalTime:'2:30 – 3:00 min',
+  {id:5,method:'Origami',name:'Origami -- percolación elegante',desc:'Copa ancha. Perfil brillante y ácido.',temp:'91°C',
+   baseClicks:96, totalTime:'2:30 - 3:00 min',
    steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
     {t:'0:00',s:`Bloom: ${b}ml. Espera 35 seg.`},
     {t:'0:35',s:`Vierte hasta ${Math.round(w*.5)}ml circular amplio.`},
@@ -404,8 +404,8 @@ const RECIPES=[
     {t:'1:50',s:`Final hasta ${w}ml.`},
     {t:'2:45',s:'Cama plana = buena distribución.'}]},
    notes:'Apertura más amplia da perfil más brillante que el V60.'},
-  {id:6,method:'Chemex',name:'Chemex — cuerpo limpio y elegante',desc:'Filtro grueso. Taza muy limpia.',temp:'92°C',
-   baseClicks:92, totalTime:'4:00 – 4:30 min',
+  {id:6,method:'Chemex',name:'Chemex -- cuerpo limpio y elegante',desc:'Filtro grueso. Taza muy limpia.',temp:'92°C',
+   baseClicks:92, totalTime:'4:00 - 4:30 min',
    steps:(d,r)=>{const w=calcWater(d,r),b=calcBloom(d);return[
     {t:'0:00',s:`Pre-humedece el filtro. Bloom: ${b}ml.`},
     {t:'0:45',s:`Primera hasta ${Math.round(w*.4)}ml.`},
@@ -413,7 +413,7 @@ const RECIPES=[
     {t:'2:30',s:`Tercera hasta ${w}ml.`},
     {t:'4:15',s:'Goteo completo.'}]},
    notes:'Molienda más gruesa por el filtro Chemex. +1°C compensa el tiempo extra.'},
-  {id:7,method:'Prensa Francesa',name:'Prensa Francesa — cuerpo completo',desc:'Inmersión total sin filtro. Máximo cuerpo.',temp:'92°C',
+  {id:7,method:'Prensa Francesa',name:'Prensa Francesa -- cuerpo completo',desc:'Inmersión total sin filtro. Máximo cuerpo.',temp:'92°C',
    baseClicks:125, totalTime:'4:00 min',
    steps:(d,r)=>{const w=calcWater(d,r);return[
     {t:'0:00',s:`${d}g molido grueso. Vierte ${w}ml.`},
@@ -422,8 +422,8 @@ const RECIPES=[
     {t:'4:00',s:'Presiona hasta la mitad, no el fondo.'},
     {t:'4:15',s:'Sirve inmediatamente.'}]},
    notes:'Amargo = sube clicks. Aguado = baja clicks.'},
-  {id:8,method:'Sifón Japonés',name:'Sifón Japonés — claridad y espectáculo',desc:'Vacío + vapor. Claridad inusual para inmersión.',temp:'93°C',
-   baseClicks:93, totalTime:'5:00 – 6:00 min',
+  {id:8,method:'Sifón Japonés',name:'Sifón Japonés -- claridad y espectáculo',desc:'Vacío + vapor. Claridad inusual para inmersión.',temp:'93°C',
+   baseClicks:93, totalTime:'5:00 - 6:00 min',
    steps:(d,r)=>{const w=calcWater(d,r);return[
     {t:'0:00',s:`Cámara inferior con ${w}ml. Enciende el fuego.`},
     {t:'2:00',s:'El agua sube. Agrega el café.'},
@@ -439,7 +439,7 @@ let currentFilter='all', expandedId=null;
 let selectedDoses={}, selectedRatios={};
 let logs=[];
 
-// ── Storage — Firebase + localStorage fallback ────────────────────────
+// ── Storage -- Firebase + localStorage fallback ────────────────────────
 function setSync(state, msg) {
   const el = document.getElementById('sync-indicator');
   if (!el) return;
@@ -481,7 +481,7 @@ function loadLogs(){
 
 // saveLogs: write to Firestore (called by submitLog / deleteLog)
 // Individual ops replace bulk save
-function saveLogs(){ /* no-op — ops are done individually */ }
+function saveLogs(){ /* no-op -- ops are done individually */ }
 
 // ── Helpers ───────────────────────────────────────────────────────────
 function updateSlider(n){document.getElementById('val-'+n).textContent=document.getElementById('sl-'+n).value;}
@@ -651,7 +651,7 @@ function renderLogs(){
     return `<div class="log-item">
       <div class="log-item-header">
         <div style="flex:1;min-width:0">
-          <div class="log-title">${l.method} · ${l.dose}g · 1:${l.ratio||16} · ${l.water||'—'}ml</div>
+          <div class="log-title">${l.method} · ${l.dose}g · 1:${l.ratio||16} · ${l.water||'--'}ml</div>
           ${l.bean?`<div class="log-bean">${l.bean}</div>`:''}
           <div class="log-meta">${meta}</div>
         </div>
@@ -670,95 +670,56 @@ function renderLogs(){
 function exportPDF(){
   if(!logs.length){setStatus('No hay sesiones para exportar.');return;}
   const btn=document.getElementById('export-btn');btn.disabled=true;btn.textContent='...';
-  const rows=logs.map(l=>{
+  const rows=logs.map(function(l){
     const desc=l.descriptors||{};
-    const dStr=Object.entries(desc).map(([k,v])=>`${k}:${v}`).join(' · ');
-    return `<tr>
-      <td>${l.date}</td><td>${l.method}</td><td>${l.bean||'—'}</td>
-      <td>${l.dose}g · 1:${l.ratio||16}</td><td>${l.water||'—'}ml</td>
-      <td>${l.clicks||'—'}</td><td>${l.temp||'—'}</td>
-      <td>${l.brewTime||'—'}</td>
-      <td style="font-size:.75rem">${dStr||'—'}</td>
-      <td><strong>${(l.score||0).toFixed(1)}</strong></td>
-      <td>${l.notes||''}</td>
-    </tr>`;
+    const dStr=Object.entries(desc).map(function(e){return e[0]+':'+e[1];}).join(' / ');
+    return '<tr>'
+      +'<td>'+(l.date||'')+'</td>'
+      +'<td>'+(l.method||'')+'</td>'
+      +'<td>'+(l.bean||'--')+'</td>'
+      +'<td>'+(l.dose||'')+'g 1:'+(l.ratio||16)+'</td>'
+      +'<td>'+(l.water||'--')+'ml</td>'
+      +'<td>'+(l.clicks||'--')+'</td>'
+      +'<td>'+(l.temp||'--')+'</td>'
+      +'<td>'+(l.brewTime||'--')+'</td>'
+      +'<td>'+(dStr||'--')+'</td>'
+      +'<td><strong>'+((l.score||0).toFixed(1))+'</strong></td>'
+      +'<td>'+(l.notes||'')+'</td>'
+      +'</tr>';
   }).join('');
-  const avg=(logs.reduce((a,l)=>a+(l.score||0),0)/logs.length).toFixed(1);
-  const methods={};logs.forEach(l=>{methods[l.method]=(methods[l.method]||0)+1;});
-  const top=Object.entries(methods).sort((a,b)=>b[1]-a[1])[0][0];
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
-  body{font-family:Georgia,serif;color:#1c1714;max-width:1000px;margin:0 auto;padding:2rem}
-  h1{font-size:2rem;font-weight:400;margin-bottom:.2rem}.sub{color:#666;font-size:.85rem;margin-bottom:2rem}
-  .stats{display:flex;gap:2rem;margin-bottom:2rem;padding:1rem;background:#f2ede7;border-radius:4px}
-  .stat{display:flex;flex-direction:column}.stat-v{font-size:1.2rem;font-weight:500}
-  .stat-k{font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.05em}
-  table{width:100%;border-collapse:collapse;font-size:.78rem}
-  th{text-align:left;padding:6px 8px;border-bottom:1.5px solid #1c1714;font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:#555}
-  td{padding:5px 8px;border-bottom:0.5px solid #ddd;vertical-align:top}
-  tr:last-child td{border-bottom:none}@media print{body{padding:1rem}}
-#sync-indicator{transition:color .3s}
-#sync-indicator.ok{color:#6a8f5a}
-#sync-indicator.err{color:#b84040}
-</style>
-<!-- Firebase SDK -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, onSnapshot }
-    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA_pW_EABJE72jsumPxNvq550yjKn4zuG0",
-    authDomain: "coffe-k6.firebaseapp.com",
-    projectId: "coffe-k6",
-    storageBucket: "coffe-k6.firebasestorage.app",
-    messagingSenderId: "389009786415",
-    appId: "1:389009786415:web:4442296d3bf608822568da"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
-  const col = collection(db, 'sessions');
-
-  // Expose DB helpers to global scope
-  window._fb = {
-    async save(entry) {
-      // Remove local id before saving — Firestore assigns its own
-      const { id, ...data } = entry;
-      const ref = await addDoc(col, data);
-      return ref.id;
-    },
-    async remove(firestoreId) {
-      await deleteDoc(doc(db, 'sessions', firestoreId));
-    },
-    listen(callback) {
-      const q = query(col, orderBy('timestamp', 'desc'));
-      return onSnapshot(q, snap => {
-        const docs = snap.docs.map(d => ({ firestoreId: d.id, ...d.data() }));
-        callback(docs);
-      });
-    }
-  };
-
-  // Signal that Firebase is ready
-  window.dispatchEvent(new Event('fb-ready'));
-</script>
-</head><body>
-  <h1>Diario de Café</h1>
-  <div class="sub">Exportado el ${new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})} · Kingrinder K6</div>
-  <div class="stats">
-    <div class="stat"><span class="stat-v">${logs.length}</span><span class="stat-k">Sesiones</span></div>
-    <div class="stat"><span class="stat-v">${avg}/10</span><span class="stat-k">Puntaje prom.</span></div>
-    <div class="stat"><span class="stat-v">${top}</span><span class="stat-k">Método favorito</span></div>
-  </div>
-  <table><thead><tr>
-    <th>Fecha</th><th>Método</th><th>Café</th><th>Dosis·Ratio</th><th>Agua</th>
-    <th>Clicks</th><th>Temp.</th><th>Tiempo</th><th>Descriptores</th><th>Score</th><th>Notas</th>
-  </tr></thead><tbody>${rows}</tbody></table></body></html>`;
+  const avg=(logs.reduce(function(a,l){return a+(l.score||0);},0)/logs.length).toFixed(1);
+  const methods={};logs.forEach(function(l){methods[l.method]=(methods[l.method]||0)+1;});
+  const top=Object.entries(methods).sort(function(a,b){return b[1]-a[1];})[0][0];
+  const fecha=new Date().toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'});
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>'
+    +'body{font-family:Georgia,serif;color:#1c1714;max-width:1000px;margin:0 auto;padding:2rem}'
+    +'h1{font-size:2rem;font-weight:400;margin-bottom:.2rem}'
+    +'.sub{color:#666;font-size:.85rem;margin-bottom:2rem}'
+    +'.stats{display:flex;gap:2rem;margin-bottom:2rem;padding:1rem;background:#f2ede7;border-radius:4px}'
+    +'.stat{display:flex;flex-direction:column}'
+    +'.stat-v{font-size:1.2rem;font-weight:500}'
+    +'.stat-k{font-size:.75rem;color:#888;text-transform:uppercase;}'
+    +'table{width:100%;border-collapse:collapse;font-size:.78rem}'
+    +'th{text-align:left;padding:6px 8px;border-bottom:1.5px solid #1c1714;font-size:.7rem;text-transform:uppercase;color:#555}'
+    +'td{padding:5px 8px;border-bottom:0.5px solid #ddd;vertical-align:top}'
+    +'</style></head><body>'
+    +'<h1>Diario de Cafe</h1>'
+    +'<div class="sub">Exportado el '+fecha+' - Kingrinder K6</div>'
+    +'<div class="stats">'
+    +'<div class="stat"><span class="stat-v">'+logs.length+'</span><span class="stat-k">Sesiones</span></div>'
+    +'<div class="stat"><span class="stat-v">'+avg+'/10</span><span class="stat-k">Puntaje prom.</span></div>'
+    +'<div class="stat"><span class="stat-v">'+top+'</span><span class="stat-k">Metodo favorito</span></div>'
+    +'</div>'
+    +'<table><thead><tr>'
+    +'<th>Fecha</th><th>Metodo</th><th>Cafe</th><th>Dosis</th><th>Agua</th>'
+    +'<th>Clicks</th><th>Temp</th><th>Tiempo</th><th>Descriptores</th><th>Score</th><th>Notas</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>'
+    +'</body></html>';
   const blob=new Blob([html],{type:'text/html'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='diario-cafe.html';a.click();
   URL.revokeObjectURL(url);
-  setStatus('Abre el archivo → Ctrl+P → Guardar como PDF');
+  setStatus("Abre el archivo y usa Ctrl+P para guardar como PDF");
   btn.disabled=false;btn.textContent='PDF';
 }
 
