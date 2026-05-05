@@ -199,7 +199,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  import { getAuth, GoogleAuthProvider, signInWithRedirect,
     getRedirectResult, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -217,46 +217,33 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
   const auth     = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  let unsubscribe = null; // active Firestore listener
+  let unsubscribe = null;
 
-  // ── Detect iOS / Safari (popup blocked) ──────────────────────────
-  function isMobileSafari() {
-    const ua = navigator.userAgent;
-    return /iP(hone|ad|od)/.test(ua) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
-      /Safari/.test(ua) && !/Chrome/.test(ua);
-  }
-
-  // ── Handle redirect result on page load ──────────────────────────
-  getRedirectResult(auth).then(result => {
-    if (result && result.user) {
-      console.log('Redirect login OK:', result.user.email);
-    }
-  }).catch(err => {
-    console.error('Redirect result error:', err);
-    const el = document.getElementById('login-msg');
-    if (el) el.textContent = 'Error al iniciar sesion: ' + err.message;
-  });
+  // ── Handle redirect result first thing on load ────────────────────
+  getRedirectResult(auth)
+    .then(result => {
+      if (result && result.user) {
+        console.log('Redirect login OK:', result.user.email);
+      }
+      window.dispatchEvent(new Event('fb-ready'));
+    })
+    .catch(err => {
+      console.error('Redirect error:', err);
+      const el = document.getElementById('login-msg');
+      if (el) el.textContent = 'Error: ' + (err.message || err.code);
+      window.dispatchEvent(new Event('fb-ready'));
+    });
 
   // ── Auth helpers ──────────────────────────────────────────────────
   window._auth = {
     loginGoogle: function() {
-      if (isMobileSafari()) {
-        // Redirect flow for iOS/Safari (popups blocked)
-        return signInWithRedirect(auth, provider);
-      } else {
-        // Popup flow for desktop/Chrome
-        return signInWithPopup(auth, provider).catch(function(err) {
-          // Fallback to redirect if popup is blocked
-          if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
-            return signInWithRedirect(auth, provider);
-          }
-          throw err;
-        });
-      }
+      const el = document.getElementById('login-msg');
+      if (el) el.textContent = 'Redirigiendo a Google...';
+      // Always use redirect — most reliable across all browsers/devices
+      return signInWithRedirect(auth, provider);
     },
     logout: () => signOut(auth),
-    onUserChange(cb) { onAuthStateChanged(auth, cb); }
+    onUserChange: function(cb) { onAuthStateChanged(auth, cb); }
   };
 
   // ── Firestore helpers (per-user) ──────────────────────────────────
@@ -271,7 +258,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
       await deleteDoc(doc(db, 'users', uid, 'sessions', firestoreId));
     },
     listen(uid, callback) {
-      if (unsubscribe) unsubscribe(); // stop previous listener
+      if (unsubscribe) unsubscribe();
       const col = collection(db, 'users', uid, 'sessions');
       const q   = query(col, orderBy('timestamp', 'desc'));
       unsubscribe = onSnapshot(q, snap => {
@@ -284,8 +271,6 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
       if (unsubscribe) { unsubscribe(); unsubscribe = null; }
     }
   };
-
-  window.dispatchEvent(new Event('fb-ready'));
 </script>
 </head>
 <body>
@@ -543,17 +528,8 @@ function loadCache(uid){
 
 // ── Login / Logout ────────────────────────────────────────────────────
 function loginGoogle(){
-  const msg = document.getElementById('login-msg');
-  msg.textContent = 'Abriendo Google…';
-  const result = window._auth.loginGoogle();
-  // signInWithRedirect returns undefined, signInWithPopup returns a promise
-  if (result && result.catch) {
-    result.catch(function(e){
-      msg.textContent = 'Error: ' + e.message;
-      console.error(e);
-    });
-  }
-  // If redirect, browser will navigate away — no further handling needed
+  document.getElementById('login-msg').textContent = 'Redirigiendo a Google…';
+  setTimeout(function(){ window._auth.loginGoogle(); }, 200);
 }
 function doLogout(){
   if(!confirm('Cerrar sesion?')) return;
@@ -592,6 +568,8 @@ function startUserListener(uid){
 
 // ── Auth state observer — runs on every auth change ───────────────────
 function initAuth(){
+  // onAuthStateChanged fires immediately with current state,
+  // including after a redirect login
   window._auth.onUserChange(function(user){
     if(user){
       currentUser = user;
@@ -613,11 +591,10 @@ function initAuth(){
 function loadLogs(){
   // Show login screen until auth resolves
   document.getElementById('login-screen').style.display = 'flex';
-  if(window._auth){
+  // Always wait for fb-ready — getRedirectResult must resolve first
+  window.addEventListener('fb-ready', function() {
     initAuth();
-  } else {
-    window.addEventListener('fb-ready', initAuth);
-  }
+  });
 }
 
 function saveLogs(){ /* no-op */ }
@@ -910,19 +887,7 @@ if('serviceWorker' in navigator){
 loadLogs();renderRecipes();
 </script>
 
-<div id="login-screen">
-  <h2>Diario de <span>Cafe</span></h2>
-  <p>Tu registro personal de cafe.<br>Inicia sesion para guardar tus sesiones en la nube.</p>
-  <button class="login-btn" onclick="loginGoogle()">
-    <svg width="20" height="20" viewBox="0 0 48 48">
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-      <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-    </svg>
-    Continuar con Google
-  </button>
-  <div class="login-loading" id="login-msg"></div>
+
 </div>
 </body>
 </html>
