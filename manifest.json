@@ -2,7 +2,7 @@
   "name": "Diario de Café — K6",
   "short_name": "Café K6",
   "description": "Recetas de café y registro de sesiones para Kingrinder K6",
-  "start_url": "/coffee-recipes/",
+  "start_url": "/coffee-k6/",
   "display": "standalone",
   "background_color": "#faf7f4",
   "theme_color": "#faf7f4",
