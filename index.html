@@ -225,13 +225,15 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
       if (result && result.user) {
         console.log('Redirect login OK:', result.user.email);
       }
-      window.dispatchEvent(new Event('fb-ready'));
     })
     .catch(err => {
       console.error('Redirect error:', err);
       const el = document.getElementById('login-msg');
-      if (el) el.textContent = 'Error: ' + (err.message || err.code);
-      window.dispatchEvent(new Event('fb-ready'));
+      if (el) el.textContent = 'Error al iniciar sesion: ' + (err.message || err.code);
+    })
+    .finally(() => {
+      window._fbReady = true;
+      if (typeof window._onFbReady === 'function') window._onFbReady();
     });
 
   // ── Auth helpers ──────────────────────────────────────────────────
@@ -591,10 +593,14 @@ function initAuth(){
 function loadLogs(){
   // Show login screen until auth resolves
   document.getElementById('login-screen').style.display = 'flex';
-  // Always wait for fb-ready — getRedirectResult must resolve first
-  window.addEventListener('fb-ready', function() {
+  // Use flag pattern to avoid race condition with module script
+  if (window._fbReady) {
+    // Firebase module already loaded before we got here
     initAuth();
-  });
+  } else {
+    // Wait for module to finish (including getRedirectResult)
+    window._onFbReady = initAuth;
+  }
 }
 
 function saveLogs(){ /* no-op */ }
