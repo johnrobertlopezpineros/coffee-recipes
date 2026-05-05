@@ -199,7 +199,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-  import { getAuth, GoogleAuthProvider, signInWithRedirect,
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
     getRedirectResult, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -238,11 +238,20 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 
   // ── Auth helpers ──────────────────────────────────────────────────
   window._auth = {
-    loginGoogle: function() {
+    loginGoogle: async function() {
       const el = document.getElementById('login-msg');
-      if (el) el.textContent = 'Redirigiendo a Google...';
-      // Always use redirect — most reliable across all browsers/devices
-      return signInWithRedirect(auth, provider);
+      try {
+        if (el) el.textContent = 'Iniciando sesión...';
+        await signInWithPopup(auth, provider);
+      } catch (err) {
+        // Popup bloqueado o cerrado → usar redirect como fallback
+        if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+          if (el) el.textContent = 'Redirigiendo a Google...';
+          return signInWithRedirect(auth, provider);
+        }
+        if (el) el.textContent = 'Error: ' + (err.message || err.code);
+        console.error('Login error:', err);
+      }
     },
     logout: () => signOut(auth),
     onUserChange: function(cb) { onAuthStateChanged(auth, cb); }
