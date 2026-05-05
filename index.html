@@ -887,7 +887,17 @@ function exportPDF(){
 }
 
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+  window.addEventListener('load', async () => {
+    try {
+      // Unregister ALL existing service workers first to clear stale cache
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for(const reg of regs) await reg.unregister();
+      // Re-register fresh
+      await navigator.serviceWorker.register('sw.js');
+    } catch(e) {
+      console.log('SW error:', e);
+    }
+  });
 }
 
 loadLogs();renderRecipes();
