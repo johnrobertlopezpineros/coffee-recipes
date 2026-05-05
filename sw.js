@@ -1,9 +1,9 @@
-const CACHE = 'cafe-k6-v4';
+const CACHE = 'cafe-k6-v5';
 const ASSETS = [
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
+  './',
+  './manifest.json',
+  './icons/icon-192x192.png',
+  './icons/icon-512x512.png',
 ];
 
 // Dominios que NUNCA deben pasar por caché — van directo a la red
@@ -23,7 +23,7 @@ function isNetworkOnly(url) {
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(CACHE)
-      .then(cache => cache.addAll(ASSETS))
+      .then(cache => cache.addAll(ASSETS).catch(() => {}))
       .then(() => self.skipWaiting())
   );
 });
